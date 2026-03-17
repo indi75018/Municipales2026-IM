@@ -1202,7 +1202,7 @@ function renderFrance(){
   var tI=0,tA=0,tC=0;
   depsT.forEach(function(d){ tI+=d.inscrits; tA+=d.abstentions; tC+=d.nbCom; });
   var pct = tI>0 ? tA/tI*100 : 0;
-  document.getElementById('p-name').textContent = 'France entiere';
+  document.getElementById('p-name').textContent = 'Hexagone et Outre-mer inclus';
   document.getElementById('p-meta').textContent = (currentTour===1?'15 mars 2026':'22 mars 2026')+' — Survolez un département pour voir les résultats';
   document.getElementById('p-body').innerHTML =
     '<div class="sg">'
