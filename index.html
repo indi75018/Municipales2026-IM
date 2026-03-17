@@ -470,7 +470,7 @@ header{height:var(--header-h);background:linear-gradient(135deg,#0e1e35 0%,#1528
         <div class="leg-row"><div class="leg-sw" style="background:#ffa726"></div><div class="leg-lbl">37 – 42%</div></div>
         <div class="leg-row"><div class="leg-sw" style="background:#fb8c00"></div><div class="leg-lbl">42 – 48%</div></div>
         <div class="leg-row"><div class="leg-sw" style="background:#e65100"></div><div class="leg-lbl">Plus de 48%</div></div>
-        <div class="leg-row"><div class="leg-sw" style="background:#c4bfb8;border:1px solid #b5b0a8"></div><div class="leg-lbl">Donnees absentes</div></div>
+        <div class="leg-row"><div class="leg-sw" style="background:#c4bfb8;border:1px solid #b5b0a8"></div><div class="leg-lbl">Données absentes</div></div>
         <div class="leg-note" id="leg-note">15 mars 2026 — Résultats en cours</div>
       </div>
       <div id="legend-nuance">
@@ -509,7 +509,7 @@ header{height:var(--header-h);background:linear-gradient(135deg,#0e1e35 0%,#1528
     <div class="p-stripe"></div>
     <div class="p-head">
       <div class="p-eye" id="p-eye">Résultats · Premier tour</div>
-      <div class="p-name" id="p-name">France entiere</div>
+      <div class="p-name" id="p-name">France entière</div>
       <div class="p-meta" id="p-meta">Survolez un département pour voir les résultats pour voir les résultats</div>
     </div>
     <div class="dv-btns">
@@ -731,7 +731,7 @@ function loadDepsIntoMap(obj, tourKey){
 // ── INIT ──────────────────────────────────────────────────
 async function init(){
   try {
-    document.getElementById('ld-s').textContent = 'Chargement des donnees JSON...';
+    document.getElementById('ld-s').textContent = 'Chargement des données JSON...';
     var resT1   = await fetch(DATA_T1);
     var resT2   = await fetch(DATA_T2);
     var resDeps = await fetch(DATA_DEPS);
@@ -760,7 +760,7 @@ async function init(){
     document.getElementById('loading').innerHTML =
       '<div style="text-align:center;max-width:400px;padding:24px">'
       +'<div style="font-size:26px;margin-bottom:10px">⚠️</div>'
-      +'<div style="font-family:\'Libre Baskerville\',serif;font-size:16px;font-weight:700;color:#1a2b4a;margin-bottom:10px">Donnees manquantes</div>'
+      +'<div style="font-family:\'Libre Baskerville\',serif;font-size:16px;font-weight:700;color:#1a2b4a;margin-bottom:10px">Données manquantes</div>'
       +'<div style="font-size:13px;color:#6b6560;line-height:1.7;background:#f7f4ef;border:1px solid #ede9e2;border-radius:4px;padding:14px;text-align:left">'
       +'Lancez <code>python prepare_data.py</code> pour generer le dossier <code>data/</code><br>'
       +'puis uploadez les 3 fichiers JSON sur GitHub.<br><br>'
@@ -965,7 +965,7 @@ function drawCom(gj,codeDep,nomDep){
       layer.bindTooltip('<div class="tt-h">'+nomCom+'</div><div class="tt-hint">Cliquez pour les details</div>',{className:'im-tt',sticky:true,offset:[14,0]});
       layer.on({
         mouseover: function(e){
-          // Mettre a jour le tooltip avec les donnees du tour actif
+          // Mettre a jour le tooltip avec les données du tour actif
           var comNow = getRecord(code) || (currentTour===2 ? DB.t1.get(code) : null);
           if(comNow){
             var lead=comNow.listes[0];
@@ -1213,7 +1213,7 @@ function renderFrance(){
     +'<div class="sc"><div class="sl">Communes</div><div class="sv sm">'+fmt(tC)+'</div></div>'
     +'</div>'
     +'<div class="sec">Navigation</div>'
-    +'<div style="font-size:13px;color:#3a3530;line-height:1.7">Survolez un département pour voir les résultats.</div>'
+    +'<div style="font-size:13px;color:#3a3530;line-height:1.7">Survolez un département pour voir les informations. Cliquez sur une commune pour voir les résultats.</div>'
     +'<div class="sec" style="margin-top:14px">Outre-mer (DROM)</div>'
     +'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px">'
     + [
