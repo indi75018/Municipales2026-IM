@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Municipales 2026 — Indi Ecorchard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0e1e35;--red:#e8472a;--gold:#d4a843;--orange:#e8602a;--cream:#f7f5f0;--cream-d:#ece8e1;--sand:#d0cac2;--muted:#6b6560;--white:#ffffff;--panel-w:385px;--header-h:66px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Source Sans 3','Helvetica Neue',sans-serif;background:var(--cream);color:#1a1a1a;display:flex;flex-direction:column}
+header{height:var(--header-h);background:linear-gradient(135deg,#0e1e35 0%,#152840 100%);display:flex;align-items:stretch;position:relative;z-index:1200;flex-shrink:0;border-bottom:2px solid rgba(212,168,67,.3)}
+.h-stripe{width:6px;background:linear-gradient(180deg,var(--orange),var(--gold));flex-shrink:0}
+.h-logo{display:flex;align-items:center;padding:0 20px 0 16px;border-right:1px solid rgba(255,255,255,.1);flex-shrink:0}
+.logo-block{display:flex;flex-direction:column;gap:1px}
+.logo-top{font-family:'Libre Baskerville',serif;font-size:11px;font-weight:700;color:#fff;letter-spacing:.2em;text-transform:uppercase;line-height:1}
+.logo-bar{height:1.5px;background:var(--gold);margin:2.5px 0}
+.logo-bot{font-size:8px;color:rgba(255,255,255,.55);letter-spacing:.22em;text-transform:uppercase}
+.h-div{width:1px;background:rgba(255,255,255,.1);margin:14px 14px}
+.h-center{flex:1;display:flex;flex-direction:column;justify-content:center;gap:3px;padding:0 4px}
+.h-eye{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.h-title{font-family:'Libre Baskerville',serif;font-size:15px;font-weight:700;color:#fff;line-height:1.1}
+.h-title em{font-style:italic;color:rgba(255,255,255,.65);font-size:13px;font-weight:400}
+.h-tour{display:flex;align-items:center;padding:0 20px;flex-shrink:0}
+.tour-btn{padding:6px 14px;font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:600;letter-spacing:.06em;border:1px solid rgba(255,255,255,.25);cursor:pointer;transition:all .2s;background:transparent;color:rgba(255,255,255,.55)}
+.tour-btn:first-child{border-radius:3px 0 0 3px}
+.tour-btn:last-child{border-radius:0 3px 3px 0;border-left:none}
+.tour-btn.active{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.tour-btn:not(.active):hover{background:rgba(255,255,255,.08);color:#fff}
+.h-mode{display:flex;align-items:center;gap:6px;padding:0 18px;flex-shrink:0;border-left:1px solid rgba(255,255,255,.1)}
+.h-mode-label{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.12em}
+.mode-btn{padding:5px 11px;font-size:10px;font-weight:600;letter-spacing:.05em;border:1px solid rgba(255,255,255,.2);cursor:pointer;transition:all .2s;background:transparent;color:rgba(255,255,255,.5);border-radius:3px}
+.mode-btn.active{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.4);color:#fff}
+.h-nav{display:flex;align-items:center;gap:6px;padding:0 18px;font-size:12px;flex-shrink:0;border-left:1px solid rgba(255,255,255,.1)}
+.h-crumb{color:rgba(255,255,255,.45);cursor:pointer;transition:color .15s;font-weight:500;white-space:nowrap}
+.h-crumb:hover{color:rgba(255,255,255,.85)}
+.h-crumb.active{color:#fff}
+.app{display:flex;flex:1;min-height:0}
+#map-wrap{flex:1;position:relative;overflow:hidden}
+#map{width:100%;height:100%}
+.leaflet-container{background:#d8d3cc!important}
+.leaflet-control-zoom{border:1px solid var(--sand)!important;box-shadow:0 2px 8px rgba(0,0,0,.1)!important}
+.leaflet-control-zoom a{background:var(--white)!important;color:var(--navy)!important;border-color:var(--sand)!important;font-weight:600!important}
+.leaflet-control-attribution{background:rgba(247,244,239,.92)!important;color:var(--muted)!important;font-size:10px!important}
+#btn-back{display:none;position:absolute;top:12px;left:12px;z-index:900;background:var(--white);border:1px solid var(--sand);border-radius:3px;padding:7px 14px 7px 10px;color:var(--navy);font-family:'Source Sans 3',sans-serif;font-size:12px;font-weight:600;cursor:pointer;align-items:center;gap:7px;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .15s}
+#btn-back:hover{background:var(--cream);border-color:var(--navy)}
+#legend{position:absolute;bottom:28px;left:14px;z-index:800;background:var(--white);border:1px solid var(--sand);border-radius:3px;padding:13px 15px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:205px}
+.leg-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--cream-d)}
+.leg-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.leg-sw{width:20px;height:10px;border-radius:2px;flex-shrink:0}
+.leg-lbl{font-size:11px;color:var(--muted)}
+.leg-note{font-size:10px;color:var(--muted);opacity:.6;margin-top:9px;padding-top:8px;border-top:1px solid var(--cream-d);line-height:1.45}
+#legend-abs,#legend-nuance{display:none}
+#legend-abs.show,#legend-nuance.show{display:block}
+.im-tt{background:var(--white)!important;border:1px solid var(--sand)!important;border-radius:3px!important;color:#1a1a1a!important;font-family:'Source Sans 3',sans-serif!important;font-size:12px!important;padding:10px 14px!important;box-shadow:0 6px 24px rgba(0,0,0,.14)!important;pointer-events:none!important;line-height:1.55!important}
+.im-tt::before{display:none!important}
+.tt-h{font-family:'Libre Baskerville',serif;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;border-bottom:2px solid var(--gold);padding-bottom:5px}
+.tt-r{display:flex;justify-content:space-between;gap:20px;margin-top:2px}
+.tt-k{color:var(--muted)}.tt-v{font-weight:600;color:var(--navy)}
+.tt-hint{font-size:10px;color:var(--muted);margin-top:6px;opacity:.65;font-style:italic}
+#panel{width:var(--panel-w);background:var(--white);border-left:1px solid var(--sand);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;box-shadow:-3px 0 16px rgba(0,0,0,.06)}
+.p-stripe{height:3px;background:linear-gradient(90deg,var(--gold),var(--navy));flex-shrink:0}
+.p-head{padding:17px 20px 13px;border-bottom:1px solid var(--cream-d);flex-shrink:0;background:var(--cream)}
+.p-eye{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-bottom:4px}
+.p-name{font-family:'Libre Baskerville',serif;font-size:20px;font-weight:700;color:var(--navy);line-height:1.2}
+.p-meta{font-size:12px;color:var(--muted);margin-top:4px}
+.p-body{flex:1;overflow-y:auto;padding:16px 20px}
+.p-body::-webkit-scrollbar{width:3px}
+.p-body::-webkit-scrollbar-thumb{background:var(--sand);border-radius:2px}
+.p-foot{padding:9px 20px;border-top:1px solid var(--cream-d);background:var(--cream);flex-shrink:0}
+.p-src{font-size:10px;color:var(--muted);line-height:1.5}
+.p-src a{color:var(--navy);text-decoration:none}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:13px}
+.sc{border:1px solid var(--cream-d);border-radius:3px;padding:11px 13px;background:var(--cream)}
+.sc.full{grid-column:1/-1}
+.sc.navy{background:var(--navy);border-color:var(--navy)}
+.sc.navy .sl{color:rgba(255,255,255,.5)}.sc.navy .sv{color:#fff}.sc.navy .ss{color:rgba(255,255,255,.45)}
+.sl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:3px}
+.sv{font-family:'Libre Baskerville',serif;font-size:25px;font-weight:700;color:var(--navy);line-height:1}
+.sv.red{color:var(--red)}.sv.sm{font-size:19px}
+.ss{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+.sec{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);padding-bottom:7px;border-bottom:1px solid var(--cream-d);margin:14px 0 10px}
+.lr{margin-bottom:10px}
+.lh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;gap:6px}
+.ln{font-size:12px;font-weight:500;flex:1;line-height:1.4}
+.ln.w{font-weight:700;color:var(--navy)}
+.lp{font-family:'Libre Baskerville',serif;font-size:13px;font-weight:700;color:var(--navy);flex-shrink:0}
+.lp.top{color:var(--gold)}
+.lb{height:5px;background:var(--cream-d);border-radius:2px;overflow:hidden}
+.lf{height:100%;border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.ls{font-size:10px;color:var(--muted);margin-top:3px}
+.wtag{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:2px 6px;border-radius:2px;margin-right:4px;background:var(--gold);color:var(--navy);vertical-align:middle}
+.nbadge{display:inline-block;font-size:9px;font-weight:600;padding:1px 6px;border-radius:2px;margin-top:3px;vertical-align:middle}
+.ct{width:100%;border-collapse:collapse}
+.ct thead th{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);padding:0 0 7px;border-bottom:1px solid var(--cream-d);text-align:left}
+.ct thead th:last-child{text-align:right}
+.ct tbody td{padding:6px 0;border-bottom:1px solid var(--cream-d);font-size:12px}
+.ct tbody td:last-child{text-align:right}
+.cn{font-weight:600;color:var(--navy)}.ci{font-size:10px;color:var(--muted)}
+.empty{text-align:center;padding:40px 14px;color:var(--muted);font-size:13px;line-height:1.7}
+.empty .ico{font-size:32px;margin-bottom:11px;opacity:.35}
+.empty strong{display:block;font-family:'Libre Baskerville',serif;font-size:15px;color:var(--navy);margin-bottom:7px}
+#loading{position:fixed;inset:0;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:0}
+.ld-brand{display:flex;flex-direction:column;align-items:center;gap:5px;margin-bottom:32px}
+.ld-bn{font-family:'Libre Baskerville',serif;font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--navy)}
+.ld-bl{width:54px;height:2px;background:var(--gold)}
+.ld-bs{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.ld-t{font-family:'Libre Baskerville',serif;font-size:21px;font-weight:700;color:var(--navy);margin-bottom:5px}
+.ld-s{font-size:13px;color:var(--muted);margin-bottom:28px}
+.ld-bw{width:220px;height:3px;background:var(--cream-d);border-radius:2px;overflow:hidden;margin-bottom:11px}
+.ld-bf{height:100%;background:linear-gradient(90deg,var(--gold),var(--navy));border-radius:2px;animation:ldp 2.2s ease-in-out infinite}
+@keyframes ldp{0%{width:0%;margin-left:0}50%{width:75%;margin-left:12%}100%{width:0%;margin-left:100%}}
+.ld-m{font-size:12px;color:var(--muted)}
+
+/* ── BARRE DE RECHERCHE FLOTTANTE (top-right carte) ─── */
+#search-wrap{
+  position:absolute;top:12px;right:14px;z-index:1000;width:280px;
+}
+#search-input{
+  width:100%;height:36px;padding:0 14px;
+  background:rgba(255,255,255,.97);border:1px solid var(--sand);
+  border-radius:4px;color:var(--navy);font-family:'Source Sans 3',sans-serif;
+  font-size:13px;outline:none;transition:all .2s;
+  box-shadow:0 2px 12px rgba(0,0,0,.14);
+}
+#search-input::placeholder{color:#9a9590}
+#search-input:focus{border-color:var(--navy);box-shadow:0 3px 16px rgba(0,0,0,.2)}
+#search-results{
+  position:absolute;top:calc(100% + 4px);left:0;right:0;
+  background:#fff;border:1px solid var(--sand);border-radius:4px;
+  box-shadow:0 8px 28px rgba(0,0,0,.17);z-index:2000;
+  max-height:300px;overflow-y:auto;display:none;
+}
+#search-results.open{display:block}
+.sr-item{
+  padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--cream-d);
+  transition:background .12s;
+}
+.sr-item:last-child{border-bottom:none}
+.sr-item:hover{background:var(--cream)}
+.sr-nom{font-size:13px;font-weight:600;color:var(--navy)}
+.sr-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.sr-empty{padding:14px 13px;font-size:12px;color:var(--muted);text-align:center}
+/* Bouton nuance grise quand niveau dep */
+#btn-nua.disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+/* Bottom sheet : caché par défaut sur desktop */
+#bottom-sheet{display:none}
+#map-mode-btns{display:none}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — Tablette & Mobile
+   ══════════════════════════════════════════════════════════ */
+
+/* ── TABLETTE (≤ 1024px) ─────────────────────────────────── */
+@media (max-width:1024px){
+  :root{ --panel-w:310px; --header-h:58px }
+  .h-center{ display:none }
+  .h-div{ display:none }
+  .h-mode-label{ display:none }
+  .h-logo{ padding:0 14px 0 12px }
+  #search-wrap{ width:230px }
+}
+
+/* ── MOBILE (≤ 700px) ────────────────────────────────────── */
+@media (max-width:700px){
+  :root{ --header-h:52px }
+
+  /* Header : logo compact + boutons tour uniquement */
+  header{ flex-wrap:nowrap; overflow:hidden }
+  .h-logo{ border-right:none; padding:0 10px 0 8px }
+  .h-logo > div > div:first-child > div:last-child > div:last-child,
+  .h-logo > div > div:last-child{ display:none } /* sous-titre + municipales */
+  .h-div{ display:none }
+  .h-center{ display:none }
+  .h-mode{ display:none }   /* masqué → boutons flottants sur la carte */
+  .h-nav{ display:none }    /* masqué → dans le bottom sheet */
+  .h-tour{ padding:0 8px 0 0 }
+  .tour-btn{ padding:5px 10px; font-size:10px }
+
+  /* Recherche : plein largeur sous le header */
+  #search-wrap{
+    position:fixed; top:var(--header-h); left:0; right:0; width:100%;
+    padding:7px 10px; background:rgba(14,30,53,.95); backdrop-filter:blur(8px);
+    z-index:1100; border-bottom:1px solid rgba(255,255,255,.12);
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
+  }
+  #search-input{
+    width:100%; height:38px; font-size:14px;
+    border-radius:6px;
+  }
+  #search-results{
+    position:fixed; top:calc(var(--header-h) + 52px); left:10px; right:10px;
+    max-height:45vh; border-radius:8px; z-index:1200;
+  }
+
+  /* Carte : plein écran — flex:1 hérité du layout global */
+  .app{ margin-top:0 }
+  #map-wrap{ flex:1; position:relative; overflow:hidden }
+
+  /* Cacher le panel latéral desktop */
+  #panel{ display:none }
+
+  /* Légende : mini, en bas à gauche */
+  #legend{
+    bottom:auto; top:8px; left:8px;
+    padding:9px 11px; min-width:0; max-width:170px;
+  }
+  .leg-title{ font-size:8px; margin-bottom:6px }
+  .leg-row{ margin-bottom:3px }
+  .leg-sw{ width:14px; height:8px }
+  .leg-lbl{ font-size:10px }
+  .leg-note{ display:none }
+
+  /* Bouton retour */
+  #btn-back{ top:calc(var(--header-h) + 60px); bottom:auto; left:10px; font-size:11px; padding:6px 10px; z-index:950 }
+
+  /* ── BOTTOM SHEET ─────────────────────────────────── */
+  :root{ --bs-peek:72px; --bs-mid:55vh; --bs-full:90vh }
+
+  #bottom-sheet{
+    display:flex;
+    position:fixed;
+    left:0; right:0; bottom:0;
+    height:var(--bs-full);
+    background:var(--white);
+    border-radius:16px 16px 0 0;
+    box-shadow:0 -6px 32px rgba(0,0,0,.18);
+    z-index:1050;
+    display:flex; flex-direction:column;
+    transform:translateY(calc(var(--bs-full) - var(--bs-peek)));
+    transition:transform .32s cubic-bezier(.4,0,.2,1);
+    will-change:transform;
+    touch-action:none;
+  }
+  #bottom-sheet.mid{
+    transform:translateY(calc(var(--bs-full) - var(--bs-mid)));
+  }
+  #bottom-sheet.open{
+    transform:translateY(0);
+  }
+
+  /* Poignée drag */
+  #bs-handle{
+    flex-shrink:0; padding:10px 0 6px;
+    display:flex; justify-content:center; cursor:grab;
+  }
+  #bs-handle::after{
+    content:''; width:36px; height:4px;
+    background:var(--sand); border-radius:2px;
+  }
+
+  /* En-tête du sheet */
+  #bs-head{
+    flex-shrink:0; padding:4px 18px 12px;
+    border-bottom:1px solid var(--cream-d);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  #bs-title{
+    font-family:'Libre Baskerville',serif;
+    font-size:17px; font-weight:700; color:var(--navy); line-height:1.2;
+  }
+  #bs-meta{ font-size:11px; color:var(--muted); margin-top:2px }
+  #bs-eye{ font-size:9px; font-weight:700; text-transform:uppercase;
+    letter-spacing:.16em; color:var(--gold); margin-bottom:2px }
+
+  /* Boutons mode dans le sheet */
+  #bs-mode{
+    display:flex; gap:6px; padding:10px 18px 8px;
+    border-bottom:1px solid var(--cream-d); flex-shrink:0;
+    background:var(--cream);
+  }
+  .bs-mode-btn{
+    flex:1; padding:7px 0; font-size:11px; font-weight:600;
+    border:1px solid var(--sand); border-radius:4px;
+    background:var(--white); color:var(--muted); cursor:pointer;
+    transition:all .18s;
+  }
+  .bs-mode-btn.active{ background:var(--navy); border-color:var(--navy); color:#fff }
+
+  /* Corps scrollable */
+  #bs-body{
+    flex:1; overflow-y:auto; padding:14px 18px;
+    -webkit-overflow-scrolling:touch;
+  }
+  #bs-body::-webkit-scrollbar{ display:none }
+
+  /* Boutons flottants mode (Abstention / Nuances) sur la carte */
+  #map-mode-btns{
+    position:absolute; bottom:calc(var(--bs-peek) + 10px); right:10px;
+    z-index:900; display:flex; flex-direction:column; gap:6px;
+  }
+  .mmb{
+    padding:8px 13px; font-size:11px; font-weight:700;
+    border:none; border-radius:20px; cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.2); transition:all .18s;
+    background:rgba(255,255,255,.95); color:var(--navy);
+  }
+  .mmb.active{ background:var(--navy); color:#fff }
+
+  /* Breadcrumb dans le header du sheet */
+  #bs-breadcrumb{
+    font-size:11px; color:var(--muted); margin-bottom:3px;
+  }
+  #bs-breadcrumb span{ cursor:pointer; color:var(--gold); font-weight:600 }
+}
+
+/* ── TRÈS PETIT (≤ 380px) ───────────────────────────────── */
+@media (max-width:380px){
+  .tour-btn{ padding:4px 7px; font-size:9px; letter-spacing:0 }
+  #bs-title{ font-size:15px }
+}
+
+
+/* ── BOUTONS DATAVIZ ─────────────────────────────────────── */
+.dv-btns{display:flex;gap:6px;padding:10px 20px 8px;border-bottom:1px solid var(--cream-d);flex-shrink:0;background:var(--cream)}
+.dv-btn{flex:1;padding:6px 8px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--sand);border-radius:3px;background:var(--white);color:var(--muted);cursor:pointer;transition:all .18s;line-height:1.3;text-align:center}
+.dv-btn:hover{border-color:var(--navy);color:var(--navy);background:var(--cream)}
+.dv-btn.active{background:var(--navy);border-color:var(--navy);color:var(--gold)}
+
+/* ── MODALE DATAVIZ ──────────────────────────────────────── */
+#dv-modal{
+  display:none;position:fixed;inset:0;z-index:2000;
+  background:rgba(14,30,53,.55);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;
+}
+#dv-modal.open{display:flex}
+#dv-box{
+  background:var(--white);border-radius:6px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+  width:min(680px,95vw);max-height:88vh;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+#dv-head{
+  padding:16px 20px 12px;border-bottom:1px solid var(--cream-d);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--navy);flex-shrink:0;
+}
+#dv-title{font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:#fff}
+#dv-subtitle{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px}
+#dv-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:20px;cursor:pointer;padding:2px 6px;line-height:1;border-radius:3px;transition:all .15s}
+#dv-close:hover{background:rgba(255,255,255,.15);color:#fff}
+#dv-filters{
+  display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid var(--cream-d);
+  flex-shrink:0;background:var(--cream);flex-wrap:wrap;
+}
+.dv-filter{padding:4px 10px;font-size:10px;font-weight:700;letter-spacing:.05em;
+  border:1px solid var(--sand);border-radius:20px;background:var(--white);
+  color:var(--muted);cursor:pointer;transition:all .15s}
+.dv-filter:hover{border-color:var(--navy);color:var(--navy)}
+.dv-filter.active{background:var(--navy);border-color:var(--navy);color:var(--gold)}
+#dv-body{flex:1;overflow-y:auto;padding:0}
+#dv-body::-webkit-scrollbar{width:3px}
+#dv-body::-webkit-scrollbar-thumb{background:var(--sand)}
+.dv-row{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 16px;border-bottom:1px solid var(--cream-d);
+  cursor:pointer;transition:background .12s;
+}
+.dv-row:hover{background:var(--cream)}
+.dv-rank{font-size:10px;font-weight:700;color:var(--muted);width:22px;text-align:right;flex-shrink:0}
+.dv-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dv-info{flex:1;min-width:0}
+.dv-cnom{font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dv-cmeta{font-size:10px;color:var(--muted);margin-top:1px}
+.dv-bar-wrap{width:110px;flex-shrink:0}
+.dv-bar-bg{height:5px;background:var(--cream-d);border-radius:2px;overflow:hidden;margin-bottom:3px}
+.dv-bar-fill{height:100%;border-radius:2px}
+.dv-score{font-family:'Libre Baskerville',serif;font-size:13px;font-weight:700;color:var(--navy);text-align:right;flex-shrink:0;width:52px}
+.dv-empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px}
+#dv-count{font-size:10px;color:rgba(255,255,255,.45);margin-top:1px}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="ld-brand">
+    <div style="display:flex;align-items:center;gap:11px;margin-bottom:10px">
+      <!-- Monogramme IE — identique au header -->
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="36" height="36" rx="4" fill="rgba(212,168,67,.12)"/>
+        <rect x="0" y="0" width="36" height="36" rx="4" stroke="#d4a843" stroke-width="1" opacity=".3"/>
+        <text x="11" y="24" font-family="Libre Baskerville,serif" font-size="16" font-weight="700" fill="#d4a843" letter-spacing="-1">I</text>
+        <text x="19" y="24" font-family="Libre Baskerville,serif" font-size="16" font-weight="700" fill="rgba(212,168,67,.55)" letter-spacing="-1">E</text>
+      </svg>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;align-items:baseline;gap:5px">
+          <span style="font-family:'Libre Baskerville',serif;font-size:13px;font-weight:700;color:var(--navy);letter-spacing:.01em;line-height:1">Indi</span>
+          <span style="font-family:'Libre Baskerville',serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.01em;line-height:1">Ecorchard</span>
+        </div>
+        <div style="height:1px;background:linear-gradient(90deg,var(--gold),transparent);width:100%"></div>
+        <div style="font-size:7.5px;color:var(--muted);letter-spacing:.18em;text-transform:uppercase">Géographe · Cartographe</div>
+      </div>
+    </div>
+  </div>
+  <div class="ld-t">Municipales 2026</div>
+  <div class="ld-s" id="ld-s">Chargement des données...</div>
+  <div class="ld-bw"><div class="ld-bf"></div></div>
+  <div class="ld-m" id="ld-m">Source : data.gouv.fr — Ministère de l'Intérieur</div>
+</div>
+
+<header>
+  <div class="h-stripe"></div>
+  <div class="h-logo" style="padding:0 20px 0 16px">
+    <div style="display:flex;align-items:center;gap:11px">
+      <!-- Monogramme IE -->
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="36" height="36" rx="4" fill="rgba(212,168,67,.12)"/>
+        <rect x="0" y="0" width="36" height="36" rx="4" stroke="#d4a843" stroke-width="1" opacity=".3"/>
+        <!-- I -->
+        <text x="11" y="24" font-family="Libre Baskerville,serif" font-size="16" font-weight="700" fill="#d4a843" letter-spacing="-1">I</text>
+        <!-- E -->
+        <text x="19" y="24" font-family="Libre Baskerville,serif" font-size="16" font-weight="700" fill="rgba(212,168,67,.55)" letter-spacing="-1">E</text>
+      </svg>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;align-items:baseline;gap:5px">
+          <span style="font-family:'Libre Baskerville',serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:.01em;line-height:1">Indi</span>
+          <span style="font-family:'Libre Baskerville',serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.01em;line-height:1">Ecorchard</span>
+        </div>
+        <div style="height:1px;background:linear-gradient(90deg,var(--gold),transparent);width:100%"></div>
+        <div style="display:flex;align-items:center;gap:5px">
+          <span style="font-size:7.5px;color:rgba(255,255,255,.45);letter-spacing:.18em;text-transform:uppercase">Géographe · Cartographe</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="h-div"></div>
+  <div class="h-center">
+    <div class="h-eye">Carte interactive</div>
+    <div class="h-title">Municipales 2026 <em>— Résultats Hexagone et Outre-mer inclus</em></div>
+  </div>
+  <div class="h-tour">
+    <button class="tour-btn active" id="btn-t1" onclick="setTour(1)">Premier tour</button>
+    <button class="tour-btn" id="btn-t2" onclick="setTour(2)" disabled title="Résultats disponibles le 22 mars 2026" style="opacity:.45;cursor:not-allowed;pointer-events:none">Second tour</button>
+  </div>
+  <div class="h-mode">
+    <span class="h-mode-label">Afficher</span>
+    <button class="mode-btn active" id="btn-abs" onclick="setMode('abs')">Abstention</button>
+    <button class="mode-btn" id="btn-nua" onclick="setMode('nuance')" title="Disponible uniquement a la maille communale">Nuances</button>
+  </div>
+  <div class="h-nav">
+    <span class="h-crumb active" id="bc-fr" onclick="retourFrance()">France</span>
+    <span id="bc-sep" style="display:none;color:rgba(255,255,255,.2);font-size:10px">›</span>
+    <span class="h-crumb" id="bc-dep" style="display:none"></span>
+  </div>
+
+  <div style="width:8px;flex-shrink:0"></div>
+</header>
+
+<div class="app">
+  <div id="map-wrap">
+    <div id="map"></div>
+    <!-- Barre de recherche flottante top-right -->
+    <div id="search-wrap">
+      <input id="search-input" type="text" placeholder="🔍  Rechercher une commune..." autocomplete="off" oninput="onSearch(this.value)" onblur="closeSearchDelayed()"/>
+      <div id="search-results"></div>
+    </div>
+
+    <button id="btn-back" onclick="retourFrance()">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M7 2L3.5 5.5L7 9" stroke="#1a2b4a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Retour aux départements
+    </button>
+    <div id="legend">
+      <div id="legend-abs" class="show">
+        <div class="leg-title">Taux d'abstention</div>
+        <div class="leg-row"><div class="leg-sw" style="background:#fff3e0;border:1px solid #f5d8a0"></div><div class="leg-lbl">Moins de 32%</div></div>
+        <div class="leg-row"><div class="leg-sw" style="background:#ffcc80"></div><div class="leg-lbl">32 – 37%</div></div>
+        <div class="leg-row"><div class="leg-sw" style="background:#ffa726"></div><div class="leg-lbl">37 – 42%</div></div>
+        <div class="leg-row"><div class="leg-sw" style="background:#fb8c00"></div><div class="leg-lbl">42 – 48%</div></div>
+        <div class="leg-row"><div class="leg-sw" style="background:#e65100"></div><div class="leg-lbl">Plus de 48%</div></div>
+        <div class="leg-row"><div class="leg-sw" style="background:#c4bfb8;border:1px solid #b5b0a8"></div><div class="leg-lbl">Données absentes</div></div>
+        <div class="leg-note" id="leg-note">15 mars 2026 — Résultats en cours</div>
+      </div>
+      <div id="legend-nuance">
+        <div class="leg-title">Nuance liste en tête</div>
+        <div id="leg-nuance-items"></div>
+        <div class="leg-note">Heuristique sur nom de liste</div>
+      </div>
+    </div>
+
+    <!-- Boutons mode flottants (mobile) -->
+    <div id="map-mode-btns">
+      <button class="mmb active" id="mmb-abs" onclick="setMode('abs')">Abstention</button>
+      <button class="mmb" id="mmb-nua" onclick="setMode('nuance')">Nuances</button>
+    </div>
+  </div>
+
+  <!-- Bottom sheet mobile -->
+  <div id="bottom-sheet">
+    <div id="bs-handle"></div>
+    <div id="bs-head">
+      <div>
+        <div id="bs-breadcrumb" style="display:none"><span onclick="retourFrance()">← France</span></div>
+        <div id="bs-eye">Résultats · Premier tour</div>
+        <div id="bs-title">Hexagone et Outre-mer inclus</div>
+        <div id="bs-meta">Survolez un département pour voir les résultats</div>
+      </div>
+    </div>
+    <div id="bs-mode">
+      <button class="bs-mode-btn active" id="bs-btn-abs" onclick="setMode('abs')">Abstention</button>
+      <button class="bs-mode-btn" id="bs-btn-nua" onclick="setMode('nuance')">Nuances polit.</button>
+    </div>
+    <div id="bs-body"></div>
+  </div>
+
+  <div id="panel">
+    <div class="p-stripe"></div>
+    <div class="p-head">
+      <div class="p-eye" id="p-eye">Résultats · Premier tour</div>
+      <div class="p-name" id="p-name">Hexagone et Outre-mer inclus</div>
+      <div class="p-meta" id="p-meta">Survolez un département pour voir les résultats</div>
+    </div>
+    <div class="dv-btns">
+      <button class="dv-btn" id="dv-btn-elus" onclick="openDV('elus')">🏆 Élus au<br>Premier tour</button>
+      <button class="dv-btn" id="dv-btn-partis" onclick="openDV('partis')">📊 Scores clés<br>des partis</button>
+    </div>
+    <div class="p-body" id="p-body">
+      <div class="empty">
+        <div class="ico">🗳️</div>
+        <strong>Explorez la carte</strong>
+        Sélectionnez un département pour consulter les résultats des municipales.<br><br>
+        Toggles en haut : 1er/Second tour et Abstention/Nuances.
+      </div>
+    </div>
+    <div class="p-foot">
+      <div class="p-src">Données : <a href="https://data.gouv.fr" target="_blank">data.gouv.fr</a> — Ministère de l'Intérieur<br>
+      <span id="contact-mail"></span> — Municipales 2026</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────
+const DATA_T1   = 'data/t1.json';
+const DATA_T2   = 'data/t2.json';
+const DATA_DEPS = 'data/deps.json';
+const DEP_GJ    = 'https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements-version-simplifiee.geojson';
+const COM_GJ    = function(d){ return 'https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements/'+d+'/communes-'+d+'-version-simplifiee.geojson'; };
+
+// Codes Z (Ministere) <-> codes numeriques (gregoiredavid GeoJSON)
+var DEP_Z_TO_NUM = {'ZA':'971','ZB':'972','ZC':'973','ZD':'974','ZM':'976','ZS':'975','ZN':'988','ZP':'987'};
+var DEP_NUM_TO_Z = {'971':'ZA','972':'ZB','973':'ZC','974':'ZD','976':'ZM','975':'ZS'};
+// GeoJSON locaux generés par prepare_data.py step 6
+var DROM_LOCAL_GJ = {
+  'ZA':'data/communes-ZA.geojson', 'ZB':'data/communes-ZB.geojson',
+  'ZC':'data/communes-ZC.geojson', 'ZD':'data/communes-ZD.geojson',
+  'ZM':'data/communes-ZM.geojson', 'ZS':'data/communes-ZS.geojson',
+  // ZN et ZP : pas de GeoJSON IGN disponible (collectivites sui generis)
+  // On affiche uniquement le panel liste des communes
+};
+// Codes DROM sans GeoJSON (panel texte seul)
+var DROM_PANEL_ONLY = {'ZN':'Nouvelle-Calédonie','ZP':'Polynésie française'};
+
+// ── NUANCES ──────────────────────────────────────────────
+const NUANCES = {
+  // ── Extrême gauche ───────────────────────────────────────
+  EXG:{label:'Extrême gauche',            color:'#6d0000', light:'#fbe9e7'},
+  // ── Gauche ───────────────────────────────────────────────
+  COM:{label:'Parti communiste (PCF)',     color:'#b71c1c', light:'#ffebee'},
+  FG: {label:'France Insoumise (LFI)',     color:'#7b1a3a', light:'#fce4ec'},
+  RDG:{label:'Radical de gauche',         color:'#c0392b', light:'#fdecea'},
+  DVG:{label:'Divers gauche',             color:'#e53935', light:'#ffebee'},
+  UG: {label:'Union de la gauche',        color:'#c2185b', light:'#fce4ec'},
+  SOC:{label:'Parti socialiste (PS)',      color:'#e91e8c', light:'#fce4f4'},
+  // ── Écologistes ──────────────────────────────────────────
+  VEC:{label:'Les Écologistes (EELV)',     color:'#2e7d32', light:'#e8f5e9'},
+  ECO:{label:'Écologiste',                color:'#43a047', light:'#e8f5e9'},
+  // ── Centre / Macronistes ─────────────────────────────────
+  GJ: {label:'Gilets jaunes',             color:'#fdd835', light:'#fffde7'},
+  REM:{label:'Renaissance',               color:'#f9a825', light:'#fff8e1'},
+  HOR:{label:'Horizons',                  color:'#81d4fa', light:'#e1f5fe'},
+  MDM:{label:'MoDem',                     color:'#c8a000', light:'#fff8e1'},
+  UC: {label:'Union du centre',           color:'#f57c00', light:'#fff3e0'},
+  DVC:{label:'Divers centre',             color:'#ffa000', light:'#fff3e0'},
+  // ── Droite modérée ────────────────────────────────────────
+  REG:{label:'Régionaliste',              color:'#ef6c00', light:'#fff3e0'},
+  UDI:{label:'UDI',                       color:'#1976d2', light:'#e3f2fd'},
+  DLF:{label:'Debout la France',          color:'#1565c0', light:'#e8eaf6'},
+  DVD:{label:'Divers droite',             color:'#3949ab', light:'#e8eaf6'},
+  UD: {label:'Union de la droite',        color:'#283593', light:'#e8eaf6'},
+  LR: {label:'Les Républicains',          color:'#0d2b6e', light:'#e3e8f5'},
+  // ── Droite nationale / Extrême droite ────────────────────
+  RN: {label:'Rassemblement National',    color:'#795548', light:'#efebe9'},
+  EXD:{label:'Extrême droite',            color:'#3e2723', light:'#efebe9'},
+  // ── Divers / Sans étiquette ──────────────────────────────
+  NC: {label:'Non communiqué',            color:'#9e9e9e', light:'#f5f5f5'},
+  DIV:{label:'Divers',                    color:'#bdbdbd', light:'#fafafa'},
+  SE: {label:'Sans étiquette',            color:'#8a9aaa', light:'#edf0f3'},
+};
+function getNuance(code){ return NUANCES[code] || {label:'Autre',color:'#8a9aaa',light:'#eef1f4'}; }
+
+// Reformater "Nom liste (Candidat Prenom)" -> "<b>Candidat Prenom</b><br>(Nom liste)"
+function formatNom(s) {
+  if(!s) return '';
+  // Format JSON: "Nom de la liste (NOM Prenom)" – on cherche la dernière paire de parenthèses
+  var m = s.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
+  if(m) {
+    var liste = m[1].trim();
+    var tete  = m[2].trim();
+    // Afficher: NOM PRENOM en gras, retour ligne, puis nom de liste en petit
+    return '<strong style="font-size:13px;letter-spacing:.01em">' + tete + '</strong>'
+      + '<br><span style="font-size:10px;color:var(--muted);font-weight:400;line-height:1.4">' + liste + '</span>';
+  }
+  // Pas de parenthèses → afficher tel quel
+  return '<strong>' + s + '</strong>';
+}
+// Version texte seul (pour tooltip)
+function formatNomTxt(s) {
+  if(!s) return '';
+  var m = s.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
+  return m ? m[2].trim() + ' — ' + m[1].trim() : s;
+}
+
+// Legende nuances
+(function(){
+  var el = document.getElementById('leg-nuance-items');
+  ['EXG','COM','FG','RDG','DVG','UG','SOC','VEC','ECO','GJ','REM','UC','MDM','DVC','REG','UDI','DLF','DVD','UD','LR','RN','EXD','NC','DIV','SE'].forEach(function(c){
+    var n = NUANCES[c];
+    if(!n) return;
+    el.innerHTML += '<div class="leg-row"><div class="leg-sw" style="background:'+n.color+'"></div><div class="leg-lbl">'+n.label+'</div></div>';
+  });
+})();
+
+// ── ETAT ─────────────────────────────────────────────────
+var DB   = { t1: new Map(), t2: new Map() };
+var currentInsee = null;  // commune actuellement selectionnee dans le panel
+var DEPS = { t1: new Map(), t2: new Map() };
+var comGeoCache = new Map();
+var geoDepsGJ = null, layerDep = null, layerCom = null;
+var currentTour = 1, currentMode = 'abs', currentDep = null;
+
+// ── CARTE ─────────────────────────────────────────────────
+var map = L.map('map',{center:[46.5,2.5],zoom:6,minZoom:4,maxZoom:16});
+// Fond de carte OSM France (75% opacité)
+var osmFR = L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributeurs &mdash; Rendu par <a href="https://www.openstreetmap.fr/">OpenStreetMap France</a>',
+  subdomains: ['a','b','c'],
+  maxZoom: 20, opacity: 0.80
+});
+// Fallback OSM standard si osmfr indisponible
+var osmStd = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  subdomains: ['a','b','c'],
+  maxZoom: 19, opacity: 0.80
+});
+osmFR.on('tileerror', function() {
+  if (!map.hasLayer(osmStd)) { map.removeLayer(osmFR); osmStd.addTo(map); }
+});
+osmFR.addTo(map);
+
+// ── COULEURS ──────────────────────────────────────────────
+function couleurAbs(p){
+  if(p==null) return '#c4bfb8';
+  if(p<32)  return '#fff3e0';  // < 32%
+  if(p<37)  return '#ffcc80';  // 32–37%
+  if(p<42)  return '#ffa726';  // 37–42%
+  if(p<48)  return '#fb8c00';  // 42–48%
+  return '#e65100';             // > 48%
+}
+// Version T1 en fallback (plus pâle) pour afficher T1 derrière le T2
+function couleurAbsT1(p){
+  if(p==null) return '#c4bfb8';
+  if(p<35)  return '#fff8f0';
+  if(p<45)  return '#ffe5b0';
+  if(p<52)  return '#ffcf80';
+  if(p<58)  return '#ffb040';
+  return '#f08010';
+}
+function couleurNuance(nua){
+  return nua ? getNuance(nua).color : '#c4bfb8';
+}
+
+// ── CHARGEMENT JSON ───────────────────────────────────────
+function loadJsonIntoMap(obj, targetMap){
+  // Format : { "75056": [nom, dep, nomDep, ins, abs, pctAbs, exp, [[nom,voix,pct,nuance],...]] }
+  Object.entries(obj).forEach(function(entry){
+    var insee = entry[0], v = entry[1];
+    var listes = (v[7]||[]).map(function(l){
+      return { nom: l[0], voix: l[1], pExp: l[2], nuance: l[3]||'' };
+    });
+    var nuanceDom = listes.length > 0 ? listes[0].nuance : '';
+    // Index 8 : données scrutin municipal (Paris/Lyon/Marseille uniquement)
+    var muniRaw = v[8] || null;
+    var listesMuni = null;
+    if(muniRaw && muniRaw.listes){
+      listesMuni = muniRaw.listes.map(function(l){
+        return { nom: l[0], voix: l[1], pExp: l[2], nuance: l[3]||'', sieges: l[4]||0 };
+      });
+    }
+    targetMap.set(insee, {
+      nom: v[0], codeDep: v[1], nomDep: v[2],
+      inscrits: v[3], abstentions: v[4], pctAbs: v[5], exprimes: v[6],
+      listes: listes, nuance: nuanceDom,
+      listesMuni: listesMuni,
+      muniStats: muniRaw ? {
+        inscrits:    muniRaw.inscrits,
+        abstentions: muniRaw.abstentions,
+        pctAbs:      muniRaw.pctAbs,
+        exprimes:    muniRaw.exprimes
+      } : null
+    });
+  });
+}
+
+function loadDepsIntoMap(obj, tourKey){
+  var target = tourKey==='t1' ? DEPS.t1 : DEPS.t2;
+  var db     = tourKey==='t1' ? DB.t1   : DB.t2;
+  Object.entries(obj).forEach(function(entry){
+    var codeDep = entry[0], dep = entry[1];
+    var td = dep[tourKey]||{};
+    if(!td.inscrits) return;
+    // nuance dominante du dep = nuance la plus frequente parmi ses communes
+    var counts = {};
+    db.forEach(function(com){
+      if(com.codeDep !== codeDep) return;
+      if(com.nuance){ counts[com.nuance] = (counts[com.nuance]||0)+1; }
+    });
+    var nuanceDom = Object.entries(counts).sort(function(a,b){return b[1]-a[1];})[0];
+    target.set(codeDep, {
+      nom: dep.nom,
+      inscrits: td.inscrits||0, abstentions: td.abstentions||0, nbCom: td.nbCom||0,
+      pctAbs: td.pctAbs||null,
+      nuanceCounts: counts,
+      nuanceDom: nuanceDom ? nuanceDom[0] : null
+    });
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────
+async function init(){
+  try {
+    document.getElementById('ld-s').textContent = 'Chargement des données JSON...';
+    var resT1   = await fetch(DATA_T1);
+    var resT2   = await fetch(DATA_T2);
+    var resDeps = await fetch(DATA_DEPS);
+    var resGeo  = await fetch(DEP_GJ);
+
+    if(!resT1.ok) throw new Error('data/t1.json introuvable ('+resT1.status+') - avez-vous lancé prepare_data.py ?');
+    if(!resDeps.ok) throw new Error('data/deps.json introuvable');
+    if(!resGeo.ok) throw new Error('GeoJSON départements inaccessible ('+resGeo.status+')');
+
+    document.getElementById('ld-s').textContent = 'Traitement...';
+    var jT1   = await resT1.json();
+    var jT2   = resT2.ok ? await resT2.json() : {};
+    var jDeps = await resDeps.json();
+    geoDepsGJ = await resGeo.json();
+
+    loadJsonIntoMap(jT1, DB.t1);
+    loadJsonIntoMap(jT2, DB.t2);
+    loadDepsIntoMap(jDeps, 't1');
+    loadDepsIntoMap(jDeps, 't2');
+
+    document.getElementById('loading').style.display = 'none';
+    drawDeps();
+    renderFrance();
+    updateModeBtn();
+  } catch(e){
+    console.error(e);
+    document.getElementById('loading').innerHTML =
+      '<div style="text-align:center;max-width:400px;padding:24px">'
+      +'<div style="font-size:26px;margin-bottom:10px">⚠️</div>'
+      +'<div style="font-family:\'Libre Baskerville\',serif;font-size:16px;font-weight:700;color:#1a2b4a;margin-bottom:10px">Données manquantes</div>'
+      +'<div style="font-size:13px;color:#6b6560;line-height:1.7;background:#f7f4ef;border:1px solid #ede9e2;border-radius:4px;padding:14px;text-align:left">'
+      +'Lancez <code>python prepare_data.py</code> pour générer le dossier <code>data/</code><br>'
+      +'puis uploadez les 3 fichiers JSON sur GitHub.<br><br>'
+      +'<span style="opacity:.6;font-size:11px">'+e.message+'</span>'
+      +'</div>'
+      +'<button onclick="location.reload()" style="margin-top:16px;padding:9px 22px;background:#1a2b4a;border:none;border-radius:3px;color:#fff;cursor:pointer;font-size:13px;font-weight:600">Réessayer</button>'
+      +'</div>';
+  }
+}
+
+// ── GETTERS ───────────────────────────────────────────────
+function getRecord(insee){ return (currentTour===1 ? DB.t1 : DB.t2).get(insee); }
+function getDep(code){
+  var deps = currentTour===1 ? DEPS.t1 : DEPS.t2;
+  return deps.get(code) || deps.get(code.padStart(2,'0'));
+}
+function getFillDep(code){
+  var dep = getDep(code); if(!dep) return '#c4bfb8';
+  return currentMode==='abs' ? couleurAbs(dep.pctAbs) : couleurNuance(dep.nuanceDom);
+}
+function getFillCom(insee){
+  var com = getRecord(insee);
+  if(com){
+    var nua = com.nuance || (com.listes&&com.listes[0] ? com.listes[0].nuance : '');
+    return currentMode==='abs' ? couleurAbs(com.pctAbs) : couleurNuance(nua);
+  }
+  // T2 manquant : afficher couleur T1 (légèrement transparente)
+  // pour que la carte T2 montre quand même l'info du Premier tour
+  if(currentTour===2){
+    var c1 = DB.t1.get(insee);
+    if(c1){
+      var n1 = c1.nuance || (c1.listes&&c1.listes[0] ? c1.listes[0].nuance : '');
+      if(currentMode==='abs') return couleurAbs(c1.pctAbs);
+      return couleurNuance(n1);
+    }
+  }
+  return '#c4bfb8';
+}
+
+// ── LAYER DEPS ────────────────────────────────────────────
+function drawDeps(){
+  if(layerCom){ map.removeLayer(layerCom); layerCom=null; }
+  if(layerDep){ map.removeLayer(layerDep); layerDep=null; }
+  layerDep = L.geoJSON(geoDepsGJ, {
+    style: function(f){ return {fillColor:getFillDep(f.properties.code),fillOpacity:.75,color:'#fff',weight:1,opacity:.75}; },
+    onEachFeature: function(f,layer){
+      var code=f.properties.code, nom=f.properties.nom;
+      layer.on({
+        mouseover: function(e){
+          e.target.setStyle({weight:2.5,color:'#e8472a',fillOpacity:.95});
+          buildTooltipDep(layer,code,nom);
+        },
+        mouseout:  function(e){ layerDep.resetStyle(e.target); },
+        click:     function(){
+          // Pour DROM : convertir code numerique -> code Z
+          var codeCom = DEP_NUM_TO_Z[code] || code;
+          var dep=getDep(code)||getDep(codeCom);
+          if(dep) renderPanelDep(code,nom,dep);
+          loadCom(codeCom,nom);
+        }
+      });
+      buildTooltipDep(layer,code,nom);
+    }
+  }).addTo(map);
+}
+
+function buildTooltipDep(layer,code,nom){
+  var dep=getDep(code);
+  var pct = dep ? (dep.pctAbs!=null ? dep.pctAbs.toFixed(1)+'%' : 'N/D') : 'N/D';
+  var nuaHtml = '';
+  if(dep && dep.nuanceDom){
+    var n=getNuance(dep.nuanceDom);
+    nuaHtml='<div class="tt-r"><span class="tt-k">Nuance dom.</span><span class="tt-v"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+n.color+';margin-right:4px;vertical-align:middle"></span>'+n.label+'</span></div>';
+  }
+  layer.bindTooltip(
+    '<div class="tt-h">'+nom+' ('+code+')</div>'
+    +'<div class="tt-r"><span class="tt-k">Abstention</span><span class="tt-v">'+pct+'</span></div>'
+    +(dep?'<div class="tt-r"><span class="tt-k">Inscrits</span><span class="tt-v">'+fmt(dep.inscrits)+'</span></div>':'')
+    +nuaHtml
+    +'<div class="tt-hint">Cliquez pour les communes</div>',
+    {className:'im-tt',sticky:true,offset:[14,0]}
+  );
+}
+
+function refreshDepStyles(){
+  if(!layerDep) return;
+  layerDep.eachLayer(function(l){
+    l.setStyle({fillColor:getFillDep(l.feature.properties.code),fillOpacity:.75,color:'#fff',weight:1,opacity:.75});
+  });
+}
+function refreshComStyles(){
+  if(!layerCom) return;
+  layerCom.eachLayer(function(l){
+    l.setStyle({fillColor:getFillCom(l.feature.properties.code),fillOpacity:.75,color:'#fff',weight:.45,opacity:.75});
+  });
+}
+
+// ── LAYER COMMUNES ────────────────────────────────────────
+// GeoJSON locaux pour Paris/Lyon/Marseille (cercles approx. centres sur chaque secteur)
+var SPECIAL_GEO = {
+  '75': 'data/arrondissements-paris.geojson',
+  '69': 'data/arrondissements-lyon.geojson',
+  '13': 'data/secteurs-marseille.geojson',
+};
+
+// Commune-mere a filtrer du GeoJSON standard quand on charge les secteurs
+var SPECIAL_MERE = {'75':'75056','69':'69123','13':'13055'};
+
+async function loadCom(codeDep,nomDep){
+  currentDep=codeDep;
+  updateModeBtn(); setBreadcrumb(nomDep);
+  document.getElementById('btn-back').style.display='flex';
+
+  // ZN / ZP : pas de GeoJSON — panel liste seul
+  if(DROM_PANEL_ONLY[codeDep]){
+    renderPanelDROMTexte(codeDep, nomDep);
+    return;
+  }
+
+  var gj;
+  if(comGeoCache.has(codeDep)){
+    gj=comGeoCache.get(codeDep);
+  } else {
+    var gjBase = null;
+
+    // PRIORITE 1 : DROM — GeoJSON local genere par prepare_data.py step 7
+    if(DROM_LOCAL_GJ[codeDep]){
+      try {
+        var rZ = await fetch(DROM_LOCAL_GJ[codeDep]);
+        if(rZ.ok) gjBase = await rZ.json();
+        else console.warn('DROM GeoJSON ' + DROM_LOCAL_GJ[codeDep] + ' non trouve ('+rZ.status+')');
+      } catch(eZ){ console.warn('DROM fetch error:', eZ); }
+    }
+
+    // PRIORITE 2 : metropole — GeoJSON gregoiredavid par dep
+    if(!gjBase){
+      try {
+        var r1 = await fetch(COM_GJ(codeDep));
+        if(r1.ok) gjBase = await r1.json();
+      } catch(e){}
+    }
+
+    // PRIORITE 3 : fallback GeoJSON national filtre
+    if(!gjBase || !gjBase.features || gjBase.features.length===0){
+      try {
+        var r2=await fetch('https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/communes-version-simplifiee.geojson');
+        var all=await r2.json();
+        var pad=codeDep.padStart(2,'0');
+        gjBase={type:'FeatureCollection',features:all.features.filter(function(f){
+          var fc=f.properties.code||'';
+          if(codeDep==='2A') return fc.startsWith('2A');
+          if(codeDep==='2B') return fc.startsWith('2B');
+          return fc.startsWith(pad);
+        })};
+      } catch(e2){ if(!gjBase) return; }
+    }
+
+    // PRIORITE 4 : Paris/Lyon/Marseille — remplacer commune-mere par secteurs IGN
+    if(SPECIAL_GEO[codeDep] && gjBase){
+      try {
+        var rSpec = await fetch(SPECIAL_GEO[codeDep]);
+        if(rSpec.ok){
+          var gjSpec = await rSpec.json();
+          var mere = SPECIAL_MERE[codeDep];
+          // Retirer la commune-mere ET les anciens codes arrondissements si present
+          var featBase = gjBase.features.filter(function(f){
+            var fc = f.properties.code||'';
+            if(fc===mere) return false;
+            if(codeDep==='69' && fc.startsWith('6938')) return false; // arr Lyon std
+            return true;
+          });
+          gjBase = {type:'FeatureCollection',
+            features: featBase.concat(gjSpec.features)};
+        }
+      } catch(eSpec){
+        // Pas de secteurs disponibles : on garde le GeoJSON de base
+        // (Paris = polygone entier, Lyon/Marseille = communes sans secteurs)
+      }
+    }
+
+    gj=gjBase; comGeoCache.set(codeDep,gj);
+  }
+  drawCom(gj,codeDep,nomDep);
+}
+
+function drawCom(gj,codeDep,nomDep){
+  // Supprimer layers existants
+  if(layerCom){ map.removeLayer(layerCom); layerCom=null; }
+  if(layerDep){ map.removeLayer(layerDep); layerDep=null; }
+  if(!gj || !gj.features || gj.features.length===0){
+    // GeoJSON vide : rien a afficher, retour a la vue dep
+    console.warn('drawCom: GeoJSON vide pour dep '+codeDep);
+    drawDeps();
+    return;
+  }
+  layerCom = L.geoJSON(gj, {
+    style: function(f){ return {fillColor:getFillCom(f.properties.code),fillOpacity:.75,color:'#fff',weight:.45,opacity:.75}; },
+    onEachFeature: function(f,layer){
+      var code=f.properties.code, com=getRecord(code);
+      var nomCom = com ? com.nom : (f.properties.nom||code);
+      // Tooltip initial (sera mis a jour au survol pour reflechir le tour actif)
+      layer.bindTooltip('<div class="tt-h">'+nomCom+'</div><div class="tt-hint">Cliquez pour les détails</div>',{className:'im-tt',sticky:true,offset:[14,0]});
+      layer.on({
+        mouseover: function(e){
+          // Mettre a jour le tooltip avec les données du tour actif
+          var comNow = getRecord(code) || (currentTour===2 ? DB.t1.get(code) : null);
+          if(comNow){
+            var lead=comNow.listes[0];
+            var leadHtml='';
+            if(lead){
+              var n2=lead.nuance?getNuance(lead.nuance):null;
+              leadHtml='<div class="tt-r"><span class="tt-k">En tête</span><span class="tt-v">'+formatNomTxt(lead.nom).substring(0,40)+' ('+lead.pExp.toFixed(1)+'%)</span></div>';
+              if(n2) leadHtml+='<div class="tt-r"><span class="tt-k">Nuance</span><span class="tt-v"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+n2.color+';margin-right:4px;vertical-align:middle"></span>'+n2.label+'</span></div>';
+            }
+            e.target.bindTooltip(
+              '<div class="tt-h">'+comNow.nom+'</div>'
+              +'<div class="tt-r"><span class="tt-k">Abstention</span><span class="tt-v">'+comNow.pctAbs.toFixed(1)+'%</span></div>'
+              +'<div class="tt-r"><span class="tt-k">Inscrits</span><span class="tt-v">'+fmt(comNow.inscrits)+'</span></div>'
+              +leadHtml,
+              {className:'im-tt',sticky:true,offset:[14,0]}
+            ).openTooltip(e.latlng);
+          }
+          e.target.setStyle({weight:2,color:'#e8472a',fillOpacity:.97});
+        },
+        mouseout: function(e){ layerCom.resetStyle(e.target); },
+        click: function(e){
+          layerCom.eachLayer(function(l){ layerCom.resetStyle(l); });
+          e.target.setStyle({weight:2,color:'#e8472a',fillOpacity:.97});
+          // Zoom sur la commune
+          try{ map.fitBounds(e.target.getBounds(),{padding:[80,80],maxZoom:14}); } catch(ez){}
+          // Recapturer les données du tour ACTIF (fix bug T2)
+          var comClick = getRecord(code);
+          if(comClick){
+            renderPanelCom(code, comClick);
+          } else {
+            // Commune sans données T2 → afficher T1 dans le panel avec bandeau
+            var comT1 = DB.t1.get(code);
+            if(comT1){
+              renderPanelCom(code, comT1, true);
+            } else {
+              document.getElementById('p-name').textContent = f.properties.nom||code;
+              document.getElementById('p-meta').textContent = 'INSEE '+code;
+              document.getElementById('p-body').innerHTML =
+                '<div class="empty"><div class="ico">📋</div>'
+                +'<strong>Données non disponibles</strong>Aucun résultat trouvé pour cette commune.'
+                +'</div>';
+            }
+          }
+        }
+      });
+    }
+  }).addTo(map);
+  try {
+    var bounds = layerCom.getBounds();
+    if(bounds.isValid()) map.fitBounds(bounds,{padding:[26,26]});
+  } catch(e){ console.warn('fitBounds error:', e); }
+  // Passer automatiquement en mode nuance à la vue communes
+  if(currentMode !== 'nuance'){
+    currentMode = 'nuance';
+    document.getElementById('btn-abs').classList.remove('active');
+    document.getElementById('btn-nua').classList.add('active');
+    document.getElementById('legend-abs').classList.remove('show');
+    document.getElementById('legend-nuance').classList.add('show');
+    if(isMobile()){
+      var ba=document.getElementById('mmb-abs'),bn=document.getElementById('mmb-nua');
+      if(ba) ba.classList.remove('active');
+      if(bn) bn.classList.add('active');
+    }
+    // Rafraîchir les couleurs avec nuance
+    layerCom.eachLayer(function(l){
+      l.setStyle({fillColor:getFillCom(l.feature.properties.code),fillOpacity:.75,color:'#fff',weight:.45,opacity:.75});
+    });
+  }
+  renderPanelDepView(codeDep,nomDep);
+}
+
+// ── TOGGLES ───────────────────────────────────────────────
+function setTour(t){
+  // Bloquer le second tour jusqu'au 22 mars 2026
+  if(t===2 && Object.keys(window._t2_locked||{}).length===0){
+    var now=new Date(), unlock=new Date('2026-03-22T20:00:00');
+    if(now<unlock){ return; }
+  }
+  if(currentTour===t) return;
+  currentTour=t;
+  document.getElementById('btn-t1').classList.toggle('active',t===1);
+  document.getElementById('btn-t2').classList.toggle('active',t===2);
+  document.getElementById('p-eye').textContent = t===1 ? 'Résultats · Premier tour' : 'Résultats · Second tour';
+  document.getElementById('leg-note').textContent = t===1
+    ? '15 mars 2026 — Résultats en cours'
+    : '22 mars 2026 — Résultats en cours';
+  if(currentDep){
+    refreshComStyles();
+    // Si une commune était affichée → mettre à jour son panel pour le nouveau tour
+    if(currentInsee){
+      var comNow = getRecord(currentInsee);
+      if(comNow){
+        renderPanelCom(currentInsee, comNow);
+      } else {
+        // Pas de données pour ce tour → renderPanelCom gère le fallback T1
+        var comFallback = DB.t1.get(currentInsee);
+        if(comFallback) renderPanelCom(currentInsee, comFallback, true);
+      }
+    }
+  } else {
+    refreshDepStyles();
+    renderFrance();
+  }
+}
+function setMode(m){
+  if(currentMode===m) return;
+  if(m==='nuance' && !currentDep) return; // nuance seulement en vue communes
+  currentMode=m;
+  document.getElementById('btn-abs').classList.toggle('active',m==='abs');
+  document.getElementById('btn-nua').classList.toggle('active',m==='nuance');
+  document.getElementById('legend-abs').classList.toggle('show',m==='abs');
+  document.getElementById('legend-nuance').classList.toggle('show',m==='nuance');
+  if(currentDep) refreshComStyles(); else refreshDepStyles();
+}
+function retourFrance(){
+  currentDep=null;
+  currentInsee=null;
+  updateModeBtn();
+  document.getElementById('bc-sep').style.display='none';
+  document.getElementById('bc-dep').style.display='none';
+  document.getElementById('bc-dep').classList.remove('active');
+  document.getElementById('bc-fr').classList.add('active');
+  document.getElementById('btn-back').style.display='none';
+  map.flyTo([46.5,2.5],6,{duration:.5});
+  drawDeps(); renderFrance();
+}
+function setBreadcrumb(nom){
+  document.getElementById('bc-sep').style.display='inline';
+  document.getElementById('bc-dep').style.display='inline';
+  document.getElementById('bc-dep').textContent=nom;
+  document.getElementById('bc-dep').classList.add('active');
+  document.getElementById('bc-fr').classList.remove('active');
+}
+
+// ── PANEL ─────────────────────────────────────────────────
+function fmt(n){ return n!=null ? (+n).toLocaleString('fr-FR') : '-'; }
+function pf(n){  return n!=null ? (+n).toFixed(1)+' %' : '-'; }
+var BAR_COLORS=['#e8472a','#1a4d80','#3175ac','#75aed3','#2d9e58','#f5a623','#cc2020','#8a9aaa'];
+
+function normalizeStr(s){
+  return s.toLowerCase()
+    .replace(/[-_'\u2019]/g,' ')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/\s+/g,' ').trim();
+}
+function doSearch(q){
+  var ql = normalizeStr(q);
+  var db = currentTour===1 ? DB.t1 : DB.t2;
+  if(db.size===0) db=DB.t1;
+  if(db.size===0){ closeSearch(); return; }
+  var results=[];
+  db.forEach(function(com,insee){
+    var nomL=normalizeStr(com.nom);
+    if(insee.startsWith(q)||nomL.startsWith(ql)||nomL.includes(' '+ql)){
+      results.push({insee:insee,com:com});
+    }
+  });
+  results.sort(function(a,b){
+    var an=normalizeStr(a.com.nom), bn=normalizeStr(b.com.nom);
+    if(an.startsWith(ql)&&!bn.startsWith(ql)) return -1;
+    if(!an.startsWith(ql)&&bn.startsWith(ql)) return 1;
+    return an.localeCompare(bn);
+  });
+  var box=document.getElementById('search-results');
+  if(results.length===0){
+    box.innerHTML='<div class="sr-empty">Aucune commune trouvée</div>';
+  } else {
+    box.innerHTML=results.slice(0,12).map(function(r){
+      return '<div class="sr-item" onclick="selectSearchResult(\''+r.insee+'\')">'
+        +'<div class="sr-nom">'+r.com.nom+'</div>'
+        +'<div class="sr-meta">'+r.com.codeDep+' · '+r.com.nomDep+'</div></div>';
+    }).join('');
+  }
+  box.classList.add('open');
+}
+function onSearch(v){
+  if(v.length<2){ closeSearch(); return; }
+  doSearch(v);
+}
+function closeSearch(){ document.getElementById('search-results').classList.remove('open'); }
+function closeSearchDelayed(){ setTimeout(closeSearch,200); }
+function selectSearchResult(insee){
+  closeSearch();
+  document.getElementById('search-input').value='';
+  var com=DB.t1.get(insee)||DB.t2.get(insee); if(!com) return;
+  var dep=com.codeDep;
+  if(currentDep!==dep){
+    loadCom(dep,com.nomDep).then(function(){
+      zoomAndShowCom(insee,com);
+    });
+  } else {
+    zoomAndShowCom(insee,com);
+  }
+}
+function zoomAndShowCom(insee,com){
+  if(layerCom){
+    layerCom.eachLayer(function(l){
+      if(l.feature&&l.feature.properties.code===insee){
+        try{ map.fitBounds(l.getBounds(),{padding:[80,80],maxZoom:14}); }catch(e){}
+        layerCom.eachLayer(function(ll){ layerCom.resetStyle(ll); });
+        l.setStyle({weight:2,color:'#e8472a',fillOpacity:.97});
+      }
+    });
+  }
+  renderPanelCom(insee,com);
+}
+function flyToDROM(lat,lng,zoom,codeZ,nomDROM){
+  map.setView([lat,lng],zoom);
+  loadCom(codeZ,nomDROM);
+}
+
+
+function updateModeBtn(){
+  var hasNuance = !!currentDep;
+  document.getElementById('btn-nua').classList.toggle('disabled', !hasNuance);
+  if(!hasNuance && currentMode==='nuance'){
+    currentMode='abs';
+    document.getElementById('btn-abs').classList.add('active');
+    document.getElementById('btn-nua').classList.remove('active');
+    document.getElementById('legend-abs').classList.add('show');
+    document.getElementById('legend-nuance').classList.remove('show');
+  }
+  // Mobile
+  if(typeof isMobile === 'function' && isMobile()){
+    var ba=document.getElementById('mmb-abs'), bn=document.getElementById('mmb-nua');
+    if(ba) ba.classList.toggle('active', currentMode==='abs');
+    if(bn) bn.classList.toggle('active', currentMode==='nuance');
+    if(bn) bn.style.opacity = hasNuance ? '1' : '.35';
+  }
+}
+
+function renderFrance(){
+  var depsT = currentTour===1 ? DEPS.t1 : DEPS.t2;
+  var tI=0,tA=0,tC=0;
+  depsT.forEach(function(d){ tI+=d.inscrits; tA+=d.abstentions; tC+=d.nbCom; });
+  var pct = tI>0 ? tA/tI*100 : 0;
+  document.getElementById('p-name').textContent = 'Hexagone et Outre-mer inclus';
+  document.getElementById('p-meta').textContent = (currentTour===1?'15 mars 2026':'22 mars 2026')+' — Survolez un département pour voir les résultats';
+  document.getElementById('p-body').innerHTML =
+    '<div class="sg">'
+    +'<div class="sc full navy"><div class="sl">Abstention nationale</div>'
+    +'<div class="sv">'+pct.toFixed(1)+' %</div>'
+    +'<div class="ss">'+(currentTour===1?'Premier tour — 15 mars 2026':'Second tour — 22 mars 2026')+'</div></div>'
+    +'<div class="sc"><div class="sl">Inscrits</div><div class="sv sm">'+((tI/1e6).toFixed(2))+'M</div></div>'
+    +'<div class="sc"><div class="sl">Communes</div><div class="sv sm">'+fmt(tC)+'</div></div>'
+    +'</div>'
+    +'<div class="sec">Navigation</div>'
+    +'<div style="font-size:13px;color:#3a3530;line-height:1.7">Sélectionnez un département pour consulter les résultats des municipales.</div>'
+    +'<div class="sec" style="margin-top:14px">Outre-mer (DROM)</div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px">'
+    + [
+        ['ZA','Guadeloupe',16.25,-61.55,10],
+        ['ZB','Martinique',14.64,-61.01,10],
+        ['ZC','Guyane',3.92,-53.12,7],
+        ['ZD','La Réunion',-21.11,55.52,10],
+        ['ZM','Mayotte',-12.82,45.17,11],
+        ['ZS','St-Pierre-et-Miquelon',46.84,-56.30,11],
+        ['ZN','Nouvelle-Calédonie',-20.9,165.62,7],
+        ['ZP','Polynésie française',-17.53,-149.56,9]
+      ].map(function(d){
+        return '<button onclick="flyToDROM('+d[2]+','+d[3]+','+d[4]+',\''+d[0]+'\',\''+d[1]+'\' )" style="padding:5px 11px;font-size:11px;font-weight:600;border:1px solid var(--gold);border-radius:3px;background:rgba(200,169,81,.08);color:var(--navy);cursor:pointer;transition:all .15s">'+d[1]+'</button>';
+      }).join('')
+    +'</div>';
+}
+
+function renderPanelDep(code,nom,dep){
+  var votants = dep.inscrits - dep.abstentions;
+  var nuaRows = '';
+  var top3 = Object.entries(dep.nuanceCounts||{}).sort(function(a,b){return b[1]-a[1];}).slice(0,3);
+  if(top3.length){
+    nuaRows='<div class="sec">Nuances les plus fréquentes</div>';
+    top3.forEach(function(entry){
+      var c=entry[0], nb=entry[1], n=getNuance(c);
+      nuaRows+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'
+        +'<span style="display:flex;align-items:center;gap:7px"><span style="width:11px;height:11px;border-radius:50%;background:'+n.color+';flex-shrink:0"></span>'
+        +'<span style="font-size:12px;font-weight:500">'+n.label+'</span></span>'
+        +'<span style="font-size:12px;color:#6b6560">'+nb+' com.</span></div>';
+    });
+  }
+  document.getElementById('p-name').textContent = nom;
+  document.getElementById('p-meta').textContent = 'Dép. '+code+' - '+fmt(dep.nbCom)+' communes - Cliquez pour details';
+  document.getElementById('p-body').innerHTML =
+    '<div class="sg">'
+    +'<div class="sc full navy"><div class="sl">Abstention</div>'
+    +'<div class="sv">'+pf(dep.pctAbs)+'</div>'
+    +'<div class="ss">'+fmt(dep.abstentions)+' abst. / '+fmt(dep.inscrits)+' inscrits</div></div>'
+    +'<div class="sc"><div class="sl">Participation</div><div class="sv sm red">'+pf(100-dep.pctAbs)+'</div><div class="ss">'+fmt(votants)+' votants</div></div>'
+    +'<div class="sc"><div class="sl">Communes</div><div class="sv sm">'+fmt(dep.nbCom)+'</div></div>'
+    +'</div>'+nuaRows;
+}
+
+function renderPanelDepView(codeDep,nomDep){
+  var dep=getDep(codeDep);
+  var coms=[];
+  var db = currentTour===1 ? DB.t1 : DB.t2;
+  var depPad = codeDep.length <= 2 ? codeDep.padStart(2,'0') : codeDep;
+  db.forEach(function(c,ins){
+    // Chercher par code dep original (Z ou numerique) ou padded
+    if(c.codeDep===codeDep || c.codeDep===depPad) coms.push({ins:ins,com:c});
+  });
+  coms.sort(function(a,b){ return b.com.inscrits-a.com.inscrits; });
+  var rows='';
+  coms.slice(0,15).forEach(function(item){
+    var c=item.com, ins=item.ins;
+    var dot = c.nuance ? '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:'+getNuance(c.nuance).color+';margin-left:5px;vertical-align:middle"></span>' : '';
+    rows+='<tr style="cursor:pointer" class="dep-com-row" data-insee="'+ins+'">'
+      +'<td><div class="cn">'+c.nom+dot+'</div><div class="ci">'+fmt(c.inscrits)+' inscrits</div></td>'
+      +'<td><span style="font-weight:700;font-size:12px">'+pf(c.pctAbs)+'</span></td></tr>';
+  });
+  document.getElementById('p-name').textContent = nomDep;
+  document.getElementById('p-meta').textContent = 'Dép. '+codeDep+' · '+fmt(coms.length)+' communes — cliquez une commune';
+  document.getElementById('p-body').innerHTML =
+    '<div class="sg"><div class="sc full navy"><div class="sl">Abstention dep.</div>'
+    +'<div class="sv">'+(dep?pf(dep.pctAbs):'-')+'</div>'
+    +'<div class="ss">'+(dep?fmt(dep.inscrits)+' inscrits - '+fmt(dep.nbCom)+' communes':'')+'</div></div></div>'
+    +'<div class="sec">Communes (cliquez pour les détails)</div>'
+    +'<table class="ct"><thead><tr><th>Commune</th><th>Abstention</th></tr></thead><tbody>'+rows+'</tbody></table>'
+    +'<div style="font-size:10px;color:#6b6560;margin-top:8px;opacity:.65">'+fmt(coms.length)+' communes au total</div>';
+
+  // Listeners clic commune → zoom + panel
+  document.getElementById('p-body').querySelectorAll('tr.dep-com-row').forEach(function(tr){
+    tr.addEventListener('mouseenter', function(){ tr.style.background='var(--cream)'; });
+    tr.addEventListener('mouseleave', function(){ tr.style.background=''; });
+    tr.addEventListener('click', function(){
+      var insee = tr.dataset.insee;
+      // Zoom sur la commune dans le layer
+      if(layerCom){
+        layerCom.eachLayer(function(l){
+          if(l.feature && l.feature.properties.code === insee){
+            try{ map.fitBounds(l.getBounds(),{padding:[80,80],maxZoom:14}); }catch(e){}
+            layerCom.eachLayer(function(ll){ layerCom.resetStyle(ll); });
+            l.setStyle({weight:2,color:'#e8472a',fillOpacity:.97});
+          }
+        });
+      }
+      var com = getRecord(insee);
+      if(com) renderPanelCom(insee, com);
+    });
+  });
+}
+
+function renderPanelDROMTexte(codeDep, nomDep){
+  var db = currentTour===1 ? DB.t1 : DB.t2;
+  var coms = [];
+  db.forEach(function(c, ins){
+    if(c.codeDep === codeDep) coms.push({ins:ins, com:c});
+  });
+  coms.sort(function(a,b){ return b.com.inscrits - a.com.inscrits; });
+
+  document.getElementById('p-name').textContent = nomDep;
+  document.getElementById('p-meta').textContent = codeDep + ' \u00b7 ' + fmt(coms.length) + ' communes \u00b7 Donn\u00e9es sans carte';
+
+  if(coms.length === 0){
+    document.getElementById('p-body').innerHTML =
+      '<div class="empty"><div class="ico">\uD83C\uDF0F</div>'
+      +'<strong>Donn\u00e9es non disponibles</strong>'
+      +'Les r\u00e9sultats pour ce territoire ne sont pas pr\u00e9sents dans le jeu de donn\u00e9es du Minist\u00e8re.'
+      +'</div>';
+    return;
+  }
+
+  var tI=0, tA=0;
+  coms.forEach(function(x){ tI+=x.com.inscrits; tA+=x.com.abstentions; });
+  var pctA = tI>0 ? tA/tI*100 : 0;
+
+  var infoBox = '<div style="background:#fef9e7;border:1px solid rgba(241,196,15,.3);border-radius:3px;'
+    +'padding:8px 11px;font-size:11px;color:#7d6608;margin-bottom:12px;line-height:1.5">'
+    +'\uD83C\uDF10 <strong>Carte non disponible</strong> \u2014 collectivit\u00e9 <em>sui generis</em>.'
+    +' Cliquez sur une commune pour les r\u00e9sultats.</div>';
+
+  var statsHtml = '<div class="sg">'
+    +'<div class="sc full navy"><div class="sl">Abstention</div>'
+    +'<div class="sv">'+pctA.toFixed(1)+' %</div>'
+    +'<div class="ss">'+fmt(tA)+' abst. / '+fmt(tI)+' inscrits \u00b7 '+fmt(coms.length)+' communes</div></div>'
+    +'</div>';
+
+  var rows = '';
+  coms.forEach(function(item){
+    var c = item.com, ins = item.ins;
+    var lead = c.listes && c.listes[0] ? c.listes[0] : null;
+    var nuaDot = lead && lead.nuance
+      ? '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:'
+        +getNuance(lead.nuance).color+';margin-left:5px;vertical-align:middle"></span>' : '';
+    var leadCell = lead
+      ? '<div style="font-size:10px;color:var(--muted);margin-top:1px">'
+        +formatNomTxt(lead.nom).substring(0,38)
+        +' <strong>'+lead.pExp.toFixed(1)+'%</strong></div>' : '';
+    rows += '<tr class="drom-row" data-insee="'+ins+'">'
+      +'<td><div class="cn">'+c.nom+nuaDot+'</div>'+leadCell+'</td>'
+      +'<td><span style="font-family:\'Libre Baskerville\',serif;font-weight:700;font-size:12px">'+pf(c.pctAbs)+'</span></td></tr>';
+  });
+
+  document.getElementById('p-body').innerHTML =
+    infoBox + statsHtml
+    +'<div class="sec">R\u00e9sultats par commune</div>'
+    +'<table class="ct"><thead><tr><th>Commune</th><th>Abstention</th></tr></thead>'
+    +'<tbody>'+rows+'</tbody></table>';
+
+  // Ajouter les listeners de clic
+  document.getElementById('p-body').querySelectorAll('tr.drom-row').forEach(function(tr){
+    tr.style.cursor = 'pointer';
+    tr.addEventListener('click', function(){
+      document.getElementById('p-body').querySelectorAll('tr.drom-row').forEach(function(r){ r.style.background=''; });
+      tr.style.background = 'var(--cream)';
+      var insee = tr.dataset.insee;
+      var com = getRecord(insee);
+      if(com) renderPanelCom(insee, com);
+    });
+  });
+}
+
+
+function renderPanelCom(insee,com,_forcedT1){
+  currentInsee = insee;
+  // Détecter si on affiche un fallback T1 en mode T2
+  var isT1Fallback = _forcedT1 || (currentTour===2 && !DB.t2.has(insee) && DB.t1.has(insee) && com===DB.t1.get(insee));
+  var votants = com.inscrits - com.abstentions;
+  var nuaInfo='';
+  var nua = com.nuance || (com.listes&&com.listes[0] ? com.listes[0].nuance : '');
+  // Afficher l'encadré même pour les codes inconnus (fallback gris)
+  if(nua || (com.listes&&com.listes[0])){
+    if(!nua && com.listes&&com.listes[0]) nua = 'DIV'; // fallback si pas de nuance
+    var ni=getNuance(nua);
+    // Bloc nuance mis en valeur : grande couleur, score en avant
+    var topListe = com.listes && com.listes[0] ? com.listes[0] : null;
+    var topPct   = topListe ? topListe.pExp.toFixed(1)+'%' : '';
+    var topVoix  = topListe ? fmt(topListe.voix)+' voix' : '';
+    var topNom   = topListe ? formatNomTxt(topListe.nom) : '';
+    nuaInfo = '<div style="background:'+ni.color+';border-radius:5px;padding:14px 16px;margin-bottom:12px;position:relative;overflow:hidden">'
+      // fond décoratif
+      +'<div style="position:absolute;right:-10px;top:-10px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.08)"></div>'
+      +'<div style="position:absolute;right:20px;bottom:-15px;width:45px;height:45px;border-radius:50%;background:rgba(255,255,255,.05)"></div>'
+      // label
+      +'<div style="font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:6px">Liste en tête</div>'
+      // nuance
+      +'<div style="font-family:\'Libre Baskerville\',serif;font-size:17px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:4px">'+ni.label+'</div>'
+      // nom candidat
+      +(topNom ? '<div style="font-size:11px;color:rgba(255,255,255,.75);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+topNom+'</div>' : '')
+      // score
+      +'<div style="display:flex;align-items:baseline;gap:8px">'
+      +'<span style="font-family:\'Libre Baskerville\',serif;font-size:26px;font-weight:700;color:#fff;line-height:1">'+topPct+'</span>'
+      +(topVoix ? '<span style="font-size:11px;color:rgba(255,255,255,.6)">'+topVoix+'</span>' : '')
+      +'</div>'
+      +'</div>';
+  }
+  var listesHtml='';
+  if(com.listes&&com.listes.length>0){
+    var labelSec = (com.listesMuni && com.listesMuni.length>0)
+      ? '<div class="sec" style="display:flex;align-items:center;gap:6px"><span style="font-size:11px;background:#e8472a;color:#fff;padding:2px 7px;border-radius:3px;font-weight:700">SCRUTIN D’ARRONDISSEMENT</span><span style="font-size:10px;color:var(--muted)">Conseillers d’arrondissement</span></div>'
+      : '<div class="sec">Résultats - Listes / Candidats</div>';
+    listesHtml = labelSec;
+    // Detecter scrutin plurinominal (< 1000 hab) : plusieurs candidats > 50%
+    var nbGt50 = com.listes.filter(function(l){ return l.pExp > 50; }).length;
+    if(nbGt50 > 1){
+      listesHtml += '<div style="font-size:11px;color:#6b6560;margin-bottom:8px;padding:6px 8px;background:#f7f4ef;border-radius:3px;line-height:1.5">'
+        +'ℹ️ Scrutin plurinominal (commune &lt; 1000 hab) : chaque elu est vote individuellement, les % expriment la part des electeurs ayant vote pour ce candidat.</div>';
+    }
+    com.listes.slice(0,8).forEach(function(l,i){
+      var barColor = l.nuance ? getNuance(l.nuance).color : (BAR_COLORS[i]||'#8a9aaa');
+      var nuaBadge='';
+      if(l.nuance){
+        var nb=getNuance(l.nuance);
+        nuaBadge='<span class="nbadge" style="background:'+nb.color+'22;color:'+nb.color+';border:1px solid '+nb.color+'44">'+nb.label+'</span>';
+      }
+      listesHtml+='<div class="lr">'
+        +'<div class="lh">'
+        +'<span class="ln'+(i===0?' w':'')+'">'+(i===0?'<span class="wtag">1er</span> ':'')+formatNom(l.nom)+'<br>'+nuaBadge+'</span>'
+        +'<span class="lp'+(i===0?' top':'')+'">' +l.pExp.toFixed(1)+' %</span>'
+        +'</div>'
+        +'<div class="lb"><div class="lf" style="width:'+Math.min(l.pExp,100)+'%;background:'+barColor+'"></div></div>'
+        +'<div class="ls">'+fmt(l.voix)+' voix</div>'
+        +'</div>';
+    });
+  } else if(isT1Fallback) {
+    // Pas de données T2 : commune décidée au Premier tour → afficher T1 avec titre clair
+    var comT1 = DB.t1.get(insee) || com;
+    if(comT1 && comT1.listes && comT1.listes.length>0){
+      // Bandeau "Pas de second tour" bien visible
+      listesHtml = '<div style="background:var(--navy);border-radius:4px;padding:10px 13px;'
+        +'margin-bottom:12px;line-height:1.55">'
+        +'<div style="font-family:\'Libre Baskerville\',serif;font-size:13px;font-weight:700;'
+        +'color:var(--gold);margin-bottom:3px">Pas de second tour disponible</div>'
+        +'<div style="font-size:11px;color:rgba(255,255,255,.75)">'
+        +'Cette commune a été décidée au premier tour.</div></div>';
+      listesHtml += '<div class="sec">Résultats du Premier tour</div>';
+      comT1.listes.slice(0,8).forEach(function(l,i){
+        var barColor = l.nuance ? getNuance(l.nuance).color : (BAR_COLORS[i]||'#8a9aaa');
+        var nuaBadge = l.nuance
+          ? '<span class="nbadge" style="background:'+getNuance(l.nuance).color+'22;color:'+getNuance(l.nuance).color+';border:1px solid '+getNuance(l.nuance).color+'44">'+getNuance(l.nuance).label+'</span>'
+          : '';
+        listesHtml+='<div class="lr">'
+          +'<div class="lh">'
+          +'<span class="ln'+(i===0?' w':'')+'">'+(i===0?'<span class="wtag">1er</span> ':'')+formatNom(l.nom)+'<br>'+nuaBadge+'</span>'
+          +'<span class="lp'+(i===0?' top':'')+'">'+l.pExp.toFixed(1)+' %</span>'
+          +'</div>'
+          +'<div class="lb"><div class="lf" style="width:'+Math.min(l.pExp,100)+'%;background:'+barColor+'"></div></div>'
+          +'<div class="ls">'+fmt(l.voix)+' voix</div>'
+          +'</div>';
+      });
+    }
+
+  }
+
+  // Stats à afficher (T1 si fallback, sinon données courantes)
+  var comStats = (isT1Fallback && DB.t1.has(insee)) ? DB.t1.get(insee) : com;
+  var votantsS = comStats.inscrits - comStats.abstentions;
+
+  // Bloc scrutin municipal PLM
+  var muniHtml = '';
+  if(!isT1Fallback && com.listesMuni && com.listesMuni.length > 0 && com.muniStats){
+    var ms = com.muniStats;
+    muniHtml = '<div style="margin-top:16px;padding-top:14px;border-top:2px solid var(--navy)">'
+      +'<div class="sec" style="display:flex;align-items:center;gap:6px">'
+      +'<span style="font-size:11px;background:var(--navy);color:var(--gold);padding:2px 7px;border-radius:3px;font-weight:700">SCRUTIN MUNICIPAL</span>'
+      +'<span style="font-size:10px;color:var(--muted)">Maire · Conseil de la ville</span>'
+      +'</div>'
+      +'<div class="sg" style="margin-bottom:8px">'
+      +'<div class="sc full navy"><div class="sl">Abstention</div>'
+      +'<div class="sv">'+pf(ms.pctAbs)+'</div>'
+      +'<div class="ss">'+fmt(ms.abstentions)+' abst. / '+fmt(ms.inscrits)+' inscrits</div></div>'
+      +'</div>';
+    com.listesMuni.slice(0,8).forEach(function(l,i){
+      var bc = l.nuance ? getNuance(l.nuance).color : (BAR_COLORS[i]||'#8a9aaa');
+      var nb = l.nuance
+        ? '<span class="nbadge" style="background:'+getNuance(l.nuance).color+'22;color:'+getNuance(l.nuance).color+';border:1px solid '+getNuance(l.nuance).color+'44">'+getNuance(l.nuance).label+'</span>'
+        : '';
+      muniHtml += '<div class="lr"><div class="lh">'
+        +'<span class="ln'+(i===0?' w':'')+'">'+(i===0?'<span class="wtag">1er</span> ':'')+formatNom(l.nom)+'<br>'+nb+'</span>'
+        +'<span class="lp'+(i===0?' top':'')+'">'+l.pExp.toFixed(1)+' %</span>'
+        +'</div><div class="lb"><div class="lf" style="width:'+Math.min(l.pExp,100)+'%;background:'+bc+'"></div></div>'
+        +'<div class="ls">'+fmt(l.voix)+' voix</div></div>';
+    });
+    muniHtml += '</div>';
+  }
+  var isPlm = !isT1Fallback && com.listesMuni && com.listesMuni.length > 0;
+  document.getElementById('p-eye').textContent = isT1Fallback
+    ? 'Résultats · Premier tour (décidé au Premier tour)'
+    : isPlm
+      ? 'Scrutin d’arrondissement · Premier tour'
+      : (currentTour===1 ? 'Résultats · Premier tour' : 'Résultats · Second tour');
+  document.getElementById('p-name').textContent = com.nom;
+  document.getElementById('p-meta').textContent = com.codeDep + ' · ' + com.nomDep;
+  document.getElementById('p-body').innerHTML =
+    (isT1Fallback
+      ? '<div style="background:var(--navy);border-radius:4px;padding:10px 13px;margin-bottom:12px;line-height:1.55">'
+        +'<div style="font-family:\'Libre Baskerville\',serif;font-size:13px;font-weight:700;color:var(--gold);margin-bottom:3px">Pas de second tour disponible</div>'
+        +'<div style="font-size:11px;color:rgba(255,255,255,.75)">Cette commune a été décidée au premier tour.</div></div>'
+      : '')
+    + nuaInfo
+    + '<div style="display:flex;gap:6px;margin-bottom:12px;min-height:96px">'
+    + '<div style="flex:1;background:var(--navy);border-radius:4px;padding:12px 14px;display:flex;flex-direction:column;justify-content:space-between">'
+    +   '<div>'
+    +     '<div style="font-size:8px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:5px">Abstention</div>'
+    +     '<div style="font-family:\'Libre Baskerville\',serif;font-size:28px;font-weight:700;color:#fff;line-height:1;letter-spacing:-.5px">' + pf(comStats.pctAbs) + '</div>'
+    +     '<div style="font-size:10px;color:rgba(255,255,255,.38);margin-top:5px">' + fmt(comStats.abstentions) + ' abstentions</div>'
+    +   '</div>'
+    +   '<div style="margin-top:10px">'
+    +     '<div style="height:2px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden">'
+    +       '<div style="height:100%;width:'+Math.min(comStats.pctAbs||0,100).toFixed(1)+'%;background:var(--gold);border-radius:2px"></div>'
+    +     '</div>'
+    +     '<div style="font-size:9px;color:rgba(255,255,255,.32);margin-top:4px;letter-spacing:.04em">Participation : ' + pf(100-(comStats.pctAbs||0)) + '</div>'
+    +   '</div>'
+    + '</div>'
+    + '<div style="display:flex;flex-direction:column;gap:6px;width:115px">'
+    + '<div style="background:var(--cream);border:1px solid var(--cream-d);border-radius:4px;padding:10px 13px;flex:1;display:flex;flex-direction:column;justify-content:center">'
+    +   '<div style="font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Inscrits</div>'
+    +   '<div style="font-family:\'Libre Baskerville\',serif;font-size:17px;font-weight:700;color:var(--navy);line-height:1">' + fmt(comStats.inscrits) + '</div>'
+    + '</div>'
+    + '<div style="background:var(--cream);border:1px solid var(--cream-d);border-radius:4px;padding:10px 13px;flex:1;display:flex;flex-direction:column;justify-content:center">'
+    +   '<div style="font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Votants</div>'
+    +   '<div style="font-family:\'Libre Baskerville\',serif;font-size:17px;font-weight:700;color:var(--navy);line-height:1">' + fmt(votantsS) + '</div>'
+    + '</div>'
+    + '</div>'
+    + '</div>'
+    + listesHtml + muniHtml;
+}
+
+
+// ══════════════════════════════════════════════════════════
+// RESPONSIVE — Bottom Sheet & Mobile
+// ══════════════════════════════════════════════════════════
+
+var isMobile = function(){ return window.innerWidth <= 700; };
+
+function syncBS(){
+  if(!isMobile()) return;
+  var bsTitle = document.getElementById('bs-title');
+  var bsMeta  = document.getElementById('bs-meta');
+  var bsEye   = document.getElementById('bs-eye');
+  var bsBody  = document.getElementById('bs-body');
+  var bsBread = document.getElementById('bs-breadcrumb');
+  var pName   = document.getElementById('p-name');
+  var pMeta   = document.getElementById('p-meta');
+  var pEye    = document.getElementById('p-eye');
+  var pBody   = document.getElementById('p-body');
+  if(bsTitle && pName) bsTitle.textContent = pName.textContent;
+  if(bsMeta  && pMeta) bsMeta.textContent  = pMeta.textContent;
+  if(bsEye   && pEye)  bsEye.textContent   = pEye.textContent;
+  if(bsBody  && pBody) bsBody.innerHTML    = pBody.innerHTML;
+  if(bsBread) bsBread.style.display = currentDep ? 'block' : 'none';
+  bsOpen('mid');
+  bindBSBodyListeners();
+}
+
+function bindBSBodyListeners(){
+  if(!isMobile()) return;
+  var body = document.getElementById('bs-body');
+  if(!body) return;
+  body.querySelectorAll('tr.dep-com-row').forEach(function(tr){
+    tr.style.cursor = 'pointer';
+    tr.addEventListener('mouseenter', function(){ tr.style.background='var(--cream)'; });
+    tr.addEventListener('mouseleave', function(){ tr.style.background=''; });
+    tr.addEventListener('click', function(){
+      var insee = tr.dataset.insee;
+      body.querySelectorAll('tr.dep-com-row').forEach(function(r){ r.style.background=''; });
+      tr.style.background = 'var(--cream)';
+      if(layerCom){
+        layerCom.eachLayer(function(l){
+          if(l.feature && l.feature.properties.code === insee){
+            try{ map.fitBounds(l.getBounds(),{padding:[80,80],maxZoom:14}); }catch(e){}
+            layerCom.eachLayer(function(ll){ layerCom.resetStyle(ll); });
+            l.setStyle({weight:2,color:'#e8472a',fillOpacity:.97});
+          }
+        });
+      }
+      var com = getRecord(insee);
+      if(com) renderPanelCom(insee, com);
+    });
+  });
+  body.querySelectorAll('tr.drom-row').forEach(function(tr){
+    tr.style.cursor = 'pointer';
+    tr.addEventListener('click', function(){
+      body.querySelectorAll('tr.drom-row').forEach(function(r){ r.style.background=''; });
+      tr.style.background = 'var(--cream)';
+      var insee = tr.dataset.insee;
+      var com = getRecord(insee);
+      if(com){ renderPanelCom(insee, com); bsOpen('open'); }
+    });
+  });
+}
+
+function updateBSModeBtn(){
+  if(!isMobile()) return;
+  document.querySelectorAll('.bs-mode-btn').forEach(function(b){ b.classList.remove('active'); });
+  var target = currentMode==='abs' ? 'bs-btn-abs' : 'bs-btn-nua';
+  var el = document.getElementById(target);
+  if(el) el.classList.add('active');
+  var nua = document.getElementById('bs-btn-nua');
+  if(nua){
+    nua.style.opacity = currentDep ? '1' : '.35';
+    nua.style.pointerEvents = currentDep ? 'auto' : 'none';
+  }
+}
+
+function bsOpen(state){
+  var bs = document.getElementById('bottom-sheet');
+  if(!bs) return;
+  bs.classList.remove('mid','open');
+  if(state==='mid') bs.classList.add('mid');
+  else if(state==='open') bs.classList.add('open');
+  map.invalidateSize();
+}
+
+// Drag gesture bottom sheet
+(function(){
+  var bs, startY, startT, curH;
+  function setup(){
+    bs = document.getElementById('bottom-sheet');
+    if(!bs) return;
+    var handle = document.getElementById('bs-handle');
+    if(handle){
+      handle.addEventListener('touchstart', onStart, {passive:true});
+      bs.addEventListener('touchstart', function(e){
+        var bsRect = bs.getBoundingClientRect();
+        if(e.touches[0].clientY - bsRect.top < 40) onStart(e);
+      }, {passive:true});
+    }
+    window.addEventListener('touchmove', onMove, {passive:false});
+    window.addEventListener('touchend',  onEnd,  {passive:true});
+  }
+  function onStart(e){
+    startY = e.touches[0].clientY;
+    startT = Date.now();
+    var bsRect = bs.getBoundingClientRect();
+    curH = window.innerHeight - bsRect.top;
+    bs.style.transition = 'none';
+  }
+  function onMove(e){
+    if(startY===undefined) return;
+    var dy = e.touches[0].clientY - startY;
+    var newH = Math.min(Math.max(curH - dy, 72), window.innerHeight * 0.92);
+    bs.style.transform = 'translateY(calc(100% - '+newH+'px))';
+    e.preventDefault();
+  }
+  function onEnd(e){
+    if(startY===undefined) return;
+    bs.style.transition = '';
+    var dy = (startY - e.changedTouches[0].clientY);
+    var vel = dy / Math.max(Date.now()-startT, 1) * 100;
+    var bsRect = bs.getBoundingClientRect();
+    var curHFinal = window.innerHeight - bsRect.top;
+    var fullH = window.innerHeight * 0.90;
+    var midH  = window.innerHeight * 0.55;
+    if(vel > 8 || curHFinal > fullH*0.7)      bsOpen('open');
+    else if(vel < -8 || curHFinal < midH*0.5) bsOpen('');
+    else                                       bsOpen('mid');
+    bs.style.transform = '';
+    startY = undefined;
+  }
+  document.addEventListener('DOMContentLoaded', setup);
+})();
+
+function wrapForMobile(name){
+  var orig = window[name];
+  if(typeof orig !== 'function') return;
+  window[name] = function(){
+    var r = orig.apply(this, arguments);
+    if(isMobile()){ syncBS(); updateBSModeBtn(); }
+    return r;
+  };
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  ['renderFrance','renderPanelDep','renderPanelDepView','renderPanelCom',
+   'renderPanelDROMTexte'].forEach(wrapForMobile);
+
+  function checkMobile(){
+    var mmb = document.getElementById('map-mode-btns');
+    if(mmb) mmb.style.display = isMobile() ? 'flex' : 'none';
+    if(isMobile()) map.invalidateSize();
+  }
+;
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+});
+
+
+// ══════════════════════════════════════════════════════════
+// DATAVIZ — Élus T1 + Scores partis
+// ══════════════════════════════════════════════════════════
+
+var DV_MODE = null;
+var DV_FILTER = null;
+
+// Partis à afficher dans "Scores clés"
+var DV_PARTIS = [
+  {key:'LUG', label:'Union gauche',    nuances:['UG']},
+  {key:'FG',  label:'LFI',             nuances:['FG']},
+  {key:'SOC', label:'PS / Socialiste', nuances:['SOC']},
+  {key:'ECO', label:'Écologistes',     nuances:['ECO','VEC']},
+  {key:'REM', label:'Renaissance',     nuances:['REM','HOR']},
+  {key:'UC',  label:'Centre',          nuances:['UC','MDM','DVC']},
+  {key:'LR',  label:'LR',              nuances:['LR']},
+  {key:'UD',  label:'Union droite',    nuances:['UD']},
+  {key:'RN',  label:'RN',              nuances:['RN']},
+  {key:'EXD', label:'Extrême droite',  nuances:['EXD']},
+];
+
+function openDV(mode){
+  DV_MODE = mode;
+  DV_FILTER = null;
+  var modal = document.getElementById('dv-modal');
+  modal.classList.add('open');
+  document.getElementById('dv-btn-elus').classList.toggle('active', mode==='elus');
+  document.getElementById('dv-btn-partis').classList.toggle('active', mode==='partis');
+  renderDV();
+}
+function closeDV(){
+  document.getElementById('dv-modal').classList.remove('open');
+  document.getElementById('dv-btn-elus').classList.remove('active');
+  document.getElementById('dv-btn-partis').classList.remove('active');
+  DV_MODE = null;
+}
+
+function renderDV(){
+  var db = DB.t1;
+  if(db.size === 0){ return; }
+
+  if(DV_MODE === 'elus'){
+    renderDVElus(db);
+  } else if(DV_MODE === 'partis'){
+    if(!DV_FILTER) DV_FILTER = DV_PARTIS[0].key;
+    renderDVPartis(db);
+  }
+}
+
+function renderDVElus(db){
+  document.getElementById('dv-title').textContent = 'Élus au Premier tour';
+  document.getElementById('dv-filters').innerHTML = '';
+
+  // Communes élues au T1 : liste où le 1er candidat > 50%
+  var elus = [];
+  db.forEach(function(com, insee){
+    if(!com.listes || com.listes.length === 0) return;
+    if(com.inscrits < 1000) return;  // exclure communes < 1000 inscrits
+    var top = com.listes[0];
+    if(top.pExp > 50){
+      elus.push({insee:insee, com:com, pct:top.pExp, voix:top.voix,
+                 nuance:top.nuance, nom_liste:top.nom});
+    }
+  });
+  elus.sort(function(a,b){ return b.com.inscrits - a.com.inscrits; });
+
+  document.getElementById('dv-subtitle').textContent =
+    'Liste élue au premier tour. Ci-dessous les 500 premières listées par nombre d\'inscrits dans la commune.';
+
+  var html = '';
+  elus.slice(0,500).forEach(function(item, i){
+    var n = getNuance(item.nuance);
+    var pct = item.pct;
+    var tete = item.nom_liste.match(/\(([^)]+)\)/) ? item.nom_liste.match(/\(([^)]+)\)/)[1] : '';
+    var nomListe = item.nom_liste.replace(/\s*\([^)]*\)\s*$/, '').trim();
+    html += '<div class="dv-row" onclick="dvGoTo(\''+item.insee+'\')">'
+      + '<div class="dv-rank">'+(i+1)+'</div>'
+      + '<div class="dv-dot" style="background:'+n.color+'"></div>'
+      + '<div class="dv-info">'
+      +   '<div class="dv-cnom">'+item.com.nom+'</div>'
+      +   '<div class="dv-cmeta">'+item.com.codeDep+' · '+item.com.nomDep
+      +   ' · <strong>'+tete+'</strong>'
+      +   ' · '+fmt(item.com.inscrits)+' inscrits</div>'
+      + '</div>'
+      + '<div class="dv-bar-wrap">'
+      +   '<div class="dv-bar-bg"><div class="dv-bar-fill" style="width:'+Math.min(pct,100)+'%;background:'+n.color+'"></div></div>'
+      +   '<div style="font-size:9px;color:var(--muted);text-align:right">'+n.label+'</div>'
+      + '</div>'
+      + '<div class="dv-score">'+pct.toFixed(1)+' %</div>'
+      + '</div>';
+  });
+  if(!html) html = '<div class="dv-empty">Données insuffisantes — rechargez après génération des JSON.</div>';
+  document.getElementById('dv-body').innerHTML = html;
+}
+
+function renderDVPartis(db){
+  document.getElementById('dv-title').textContent = 'Scores clés des partis';
+
+  // Filtres partis
+  var filtersHtml = DV_PARTIS.map(function(p){
+    var n = getNuance(p.nuances[0]);
+    return '<button class="dv-filter'+(DV_FILTER===p.key?' active':'')+'" '
+      +'onclick="DV_FILTER=\''+p.key+'\';renderDV()" '
+      +'style="'+(DV_FILTER===p.key?'background:'+n.color+';border-color:'+n.color+';color:#fff':'')+'">'
+      +p.label+'</button>';
+  }).join('');
+  document.getElementById('dv-filters').innerHTML = filtersHtml;
+
+  // Trouver le parti sélectionné
+  var parti = DV_PARTIS.filter(function(p){ return p.key===DV_FILTER; })[0];
+  if(!parti) return;
+  var nuances_set = parti.nuances;
+
+  // Chercher dans chaque commune la liste correspondant à ce parti
+  var rows = [];
+  db.forEach(function(com, insee){
+    if(!com.listes) return;
+    var best_voix = 0, best_pct = 0, best_nom = '';
+    com.listes.forEach(function(l){
+      if(nuances_set.indexOf(l.nuance) >= 0 && l.voix > best_voix){
+        best_voix = l.voix;
+        best_pct  = l.pExp;
+        best_nom  = l.nom;
+      }
+    });
+    if(best_voix > 0){
+      rows.push({insee:insee, com:com, voix:best_voix, pct:best_pct, nom:best_nom});
+    }
+  });
+  rows.sort(function(a,b){ return b.voix - a.voix; });
+
+  var n = getNuance(parti.nuances[0]);
+  document.getElementById('dv-subtitle').textContent =
+    rows.length + ' communes avec ' + parti.label + ' · triées par voix';
+
+  var maxVoix = rows.length > 0 ? rows[0].voix : 1;
+  var html = '';
+  rows.slice(0,100).forEach(function(item, i){
+    var tete = item.nom.match(/\(([^)]+)\)/) ? item.nom.match(/\(([^)]+)\)/)[1] : '';
+    html += '<div class="dv-row" onclick="dvGoTo(\''+item.insee+'\')">'
+      + '<div class="dv-rank">'+(i+1)+'</div>'
+      + '<div class="dv-dot" style="background:'+n.color+'"></div>'
+      + '<div class="dv-info">'
+      +   '<div class="dv-cnom">'+item.com.nom+'</div>'
+      +   '<div class="dv-cmeta">'+item.com.codeDep+' · '+item.com.nomDep
+      +   (tete?' · <strong>'+tete+'</strong>':'')+' · '+item.pct.toFixed(1)+'%</div>'
+      + '</div>'
+      + '<div class="dv-bar-wrap">'
+      +   '<div class="dv-bar-bg"><div class="dv-bar-fill" style="width:'+Math.min(item.voix/maxVoix*100,100)+'%;background:'+n.color+'"></div></div>'
+      +   '<div style="font-size:9px;color:var(--muted);text-align:right">'+item.pct.toFixed(1)+'%</div>'
+      + '</div>'
+      + '<div class="dv-score">'+fmt(item.voix)+'</div>'
+      + '</div>';
+  });
+  if(!html) html = '<div class="dv-empty">Aucune commune trouvée pour ce parti.</div>';
+  document.getElementById('dv-body').innerHTML = html;
+}
+
+function dvGoTo(insee){
+  closeDV();
+  var com = DB.t1.get(insee) || DB.t2.get(insee);
+  if(!com) return;
+  var dep = com.codeDep;
+  if(currentDep !== dep){
+    loadCom(dep, com.nomDep).then(function(){ zoomAndShowCom(insee, com); });
+  } else {
+    zoomAndShowCom(insee, com);
+  }
+}
+
+// Fermer avec Échap
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') closeDV();
+});
+
+// ── DEMARRAGE ──────────────────────────────────────────────
+// Email via JS pour éviter l'obfuscation Cloudflare
+(function(){
+  var u='indi.ecorchard', d='gmail.com';
+  var el=document.getElementById('contact-mail');
+  if(el){ el.innerHTML='<a href="mailto:'+u+'@'+d+'" style="color:var(--muted);text-decoration:none">'+u+'@'+d+'</a>'; }
+})();
+init();
+</script>
+
+<!-- ── MODALE DATAVIZ ──────────────────────────────────────── -->
+<div id="dv-modal" onclick="if(event.target===this)closeDV()">
+  <div id="dv-box">
+    <div id="dv-head">
+      <div>
+        <div id="dv-title">Dataviz</div>
+        <div id="dv-subtitle" id="dv-count"></div>
+      </div>
+      <button id="dv-close" onclick="closeDV()">✕</button>
+    </div>
+    <div id="dv-filters"></div>
+    <div id="dv-body"></div>
+  </div>
+</div>
+</body>
+</html>
